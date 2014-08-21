@@ -97,7 +97,7 @@
 		
 		
 		
-		<fx:jar destfile="dist/Dienstplan Software.jar">
+		<fx:jar destfile="dist/dienstplan-0.0.1-SNAPSHOT.jar">
 			<fx:application refid="fxApplication"/>
 			<fileset dir="build/classes">
 			</fileset>
