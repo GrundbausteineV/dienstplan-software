@@ -22,7 +22,7 @@
 		
 		<mkdir dir="project" />
 		<copy todir="project">
-			<fileset dir="D:\Eclipse Workspace\Dienstplan Software">
+			<fileset dir="./">
 				<include name="src/**" />
 			</fileset>
 		</copy>
