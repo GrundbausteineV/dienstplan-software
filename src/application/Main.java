@@ -31,7 +31,7 @@ public class Main extends Application {
 		loginLogicC = new loginLogic(this);
     	
     	try{
-            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/fxml/login/login.fxml"));
+            FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
             AnchorPane rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
             
@@ -45,7 +45,7 @@ public class Main extends Application {
             //primaryStage.getIcons().add(new Image("/resources/icons/app-icon.png"));
             //primaryStage.getIcons().add(new Image("/resources/icons/favicon_32.png"));
             //primaryStage.getIcons().add(new Image("/resources/icons/favicon_64.png"));
-            primaryStage.getIcons().add(new Image("/icons/blue-folder.png"));
+            primaryStage.getIcons().add(new Image("/resources/icons/blue-folder.png"));
             primaryStage.show();
         } catch (IOException e) {
             e.printStackTrace();
