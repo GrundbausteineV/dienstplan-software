@@ -1,6 +1,8 @@
 package application;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
 
 import application.controller.login.loginController;
 import application.logic.login.loginLogic;
@@ -32,6 +34,9 @@ public class Main extends Application {
     	
     	try{
             FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
+            
+            loader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale("en", "EN")));
+            
             AnchorPane rootLayout = loader.load();
             Scene scene = new Scene(rootLayout);
             

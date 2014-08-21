@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
@@ -47,6 +48,8 @@ public class loginController {
 		this.login_button_info.setOnAction((event) -> {
 			this.app.loginLogicC.displayInfoLayer();
 		});
+		
+		this.login_menubutton_language.getItems().addAll(new MenuItem("Deutsch"), new MenuItem("Englisch"));
 		
 	}
 
