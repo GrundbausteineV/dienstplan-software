@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 	<project name="Dienstplan Software" default="do-deploy" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
-	<target name="init-fx-tasks">
+		<property environment="env"/>
+		<target name="init-fx-tasks">
 		<path id="fxant">
 			<filelist>
 				<file name="${java.home}\..\lib\ant-javafx.jar"/>
@@ -82,7 +83,7 @@
 		
 		
 		<fx:resources id="appRes">
-			<fx:fileset dir="dist" includes="Dienstplan Software.jar"/>
+			<fx:fileset dir="dist" includes="dienstplan-0.0.1-SNAPSHOT.jar"/>
 			<fx:fileset dir="dist" includes="libs/*"/>
 		</fx:resources> 
 		
