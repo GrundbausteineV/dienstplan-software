@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.7" prefHeight="300.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="grundbaustein.dienstplan.controller.login.loginController">
+<children><TextField fx:id="login_textfield_username" layoutX="60.0" layoutY="89.0" minWidth="180.0" /><Label layoutX="60.0" layoutY="59.0" text="Benutzername" /><Label layoutX="60.0" layoutY="145.0" text="Passwort" /><PasswordField fx:id="login_passwordfield_password" layoutX="60.0" layoutY="173.0" minWidth="180.0" /><Button fx:id="login_button_login" layoutX="127.0" layoutY="217.0" mnemonicParsing="false" text="Login" /><Button fx:id="login_button_quit" layoutX="223.0" layoutY="261.0" mnemonicParsing="false" text="Beenden" /><Button fx:id="login_button_info" layoutX="14.0" layoutY="261.0" mnemonicParsing="false" text="Info" /><MenuButton fx:id="login_menubutton_language" layoutX="211.0" layoutY="14.0" mnemonicParsing="false" text="Sprache">
+  <items>
+    <MenuItem mnemonicParsing="false" text="Action 1" />
+    <MenuItem mnemonicParsing="false" text="Action 2" />
+  </items>
+</MenuButton>
+</children></AnchorPane>
