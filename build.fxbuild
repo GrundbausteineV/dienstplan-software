@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="ASCII"?>
-<anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build">
+<anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://org.eclipse.fx.ide.jdt/1.0" buildDirectory="${project}/build" cssToBin="true">
   <deploy>
-    <application name="Dienstplan Software"/>
-    <info/>
+    <application name="Dienstplan Software" mainclass="application.Main" version="0.0.1-SNAPSHOT" toolkit="fx"/>
+    <info title="Dienstplan Software" vendor="Grundbaustein e.V."/>
   </deploy>
   <signjar/>
 </anttasks:AntTask>
