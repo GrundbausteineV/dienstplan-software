@@ -1,1 +1,6 @@
 /bin/
+/build/
+/dist/
+/logs/
+/project/
+/configs/

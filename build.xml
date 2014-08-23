@@ -15,10 +15,11 @@
 	</target>
 	<target name="setup-staging-area">
 		<delete dir="externalLibs" />
+		<delete dir="libs" />
 		<delete dir="project" />
 		<delete dir="projectRefs" />
 		
-		<mkdir dir="externalLibs" />
+		<!--<mkdir dir="externalLibs" />-->
 		
 		
 		<mkdir dir="project" />
@@ -33,12 +34,16 @@
 	<target name='do-compile'>
 		<delete dir="build" />
 		<mkdir dir="build/src" />
-		<mkdir dir="build/libs" />
+		<mkdir dir="build/lib" />
 		<mkdir dir="build/classes" />
 	
 		<!-- Copy project-libs references -->
 		<copy todir="build/libs">
-			<fileset dir="externalLibs">
+			<fileset dir="lib">
+			</fileset>
+		</copy>
+		<copy todir="build/lib">
+			<fileset dir="lib">
 			</fileset>
 		</copy>
 	
@@ -51,7 +56,7 @@
 			</fileset>
 		</copy>
 	
-		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="Cp1252">
+		<javac includeantruntime="false" source="1.8" target="1.8" srcdir="build/src" destdir="build/classes" encoding="UTF-8">
 			<classpath>
 				<fileset dir="build/libs">
 					<include name="*"/>
@@ -73,10 +78,10 @@
 		<delete file="deploy" />
 		
 		<mkdir dir="dist" />
-		<mkdir dir="dist/libs" />
+		<mkdir dir="dist/lib" />
 		
-		<copy todir="dist/libs">
-			<fileset dir="externalLibs">
+		<copy todir="dist/lib">
+			<fileset dir="lib">
 				<include name="*" />
 			</fileset>
 		</copy>
@@ -101,7 +106,9 @@
 			<fx:application refid="fxApplication"/>
 			<fileset dir="build/classes">
 			</fileset>
-			<fx:resources refid="appRes"/>
+			<fx:resources>
+			    <fx:fileset dir="dist" includes="lib/*.jar"/>
+			</fx:resources>
 			
 			<manifest>
 				<attribute name="Implementation-Vendor" value="Grundbaustein e.V."/>
