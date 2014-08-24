@@ -10,7 +10,6 @@ import javafx.stage.StageStyle;
 public class loginLogic {
 
 	// Reference to the main application
-	@SuppressWarnings("unused")
 	private Main app;
 
 	/**
@@ -31,6 +30,20 @@ public class loginLogic {
 		dialog.show();
 		
 		return;
+	}
+	
+	public void setLanguage(String language) {
+		if(language.equalsIgnoreCase("Deutsch")) {
+			String languageCode = "de";
+			String countryCode = "DE";
+			this.app.appConfig.setLanguage(languageCode, countryCode, "Deutsch");
+			app.setAppLanguage(languageCode, countryCode);
+		} else {
+			String languageCode = "en";
+			String countryCode = "EN";
+			this.app.appConfig.setLanguage(languageCode, countryCode, "English");
+			app.setAppLanguage(languageCode, countryCode);
+		}
 	}
 
 }
