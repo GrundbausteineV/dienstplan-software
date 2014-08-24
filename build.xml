@@ -140,5 +140,6 @@
 		<delete file="dist/temp.jar"/>
 		<delete file="dist/bundle.jar"/>
 		<delete dir="dist/lib" />
+		<delete dir="dist/libs" />
 	</target>
 </project>
