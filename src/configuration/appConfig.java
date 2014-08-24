@@ -14,43 +14,43 @@ public class appConfig {
 		this.app = app;
 	}
 
-	public void reloadConfig() {
-		if (app.configFile == null) {	    	
+	private void reloadConfig() {
+		if (this.app.configFile == null) {	    	
 			File dir = new File("configs");
 			if(dir.exists() == false) {
 				dir.mkdir();
 			}
-			app.configFile = new File("configs/config.yml");
-			if(app.configFile.exists() == false) {
+			this.app.configFile = new File("configs/config.yml");
+			if(this.app.configFile.exists() == false) {
 				try {
-					app.configFile.createNewFile();
+					this.app.configFile.createNewFile();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-					app.LogError("Couldn't create new config in 'configs/config.yml'", e);
+					this.app.log.LogError("Couldn't create new config in 'configs/config.yml'", e);
 				}
-			}			
+			}	
+			this.app.configFile = new File("configs/config.yml");
 		}
-		app.config = YamlConfiguration.loadConfiguration(app.configFile);
+		this.app.config = YamlConfiguration.loadConfiguration(this.app.configFile);
 	
 		
 	}
 
-	public FileConfiguration getConfig() {
-		if (app.config == null) {
+	private FileConfiguration getConfig() {
+		if (this.app.config == null) {
 			reloadConfig();
 		}
-		return app.config;
+		return this.app.config;
 	}
 
 	public void saveConfig() {
-		if (app.config == null || app.configFile == null) {
+		if (this.app.config == null || this.app.configFile == null) {
 			return;
 		}
 		try {
-			app.config.save(app.configFile);
+			this.app.config.save(this.app.configFile);
 		} catch (IOException ex) {
-			app.LogError("Could not save config to " + app.configFile, ex);
+			this.app.log.LogError("Could not save config to " + this.app.configFile, ex);
 		}
 	}
 
@@ -59,13 +59,43 @@ public class appConfig {
 		reloadConfig();
 		getConfig();
 
-		if(app.config.getString("Credit.Version") == null)
-        	app.config.set("Credit.Version", "v0.0.1");
+		if(this.app.config.getString("Credit.Author") == null)
+			this.app.config.set("Credit.Author", "Jan-Eric Dreßler");
+		if(this.app.config.getString("Credit.Company") == null)
+			this.app.config.set("Credit.Company", "Gemeinschaft für Medienkompetenz 'Grundbaustein e.V.'");
+		if(this.app.config.getString("Credit.Version") == null)
+			this.app.config.set("Credit.Version", "v0.0.1");
+
+		if(this.app.config.getString("Settings.Language.language") == null)
+			this.app.config.set("Settings.Language.language", "de");
+		if(this.app.config.getString("Settings.Language.country") == null)
+			this.app.config.set("Settings.Language.country", "DE");
+		if(this.app.config.getString("Settings.Language.description") == null)
+			this.app.config.set("Settings.Language.description", "Deutsch");
 
 		saveConfig();
 
 		return true;
 
+	}
+	
+	public String getLanguageDescription() {
+		return this.app.config.getString("Settings.Language.description", "Deutsch");
+	}
+	
+	public String getLanguageLanguage() {
+		return this.app.config.getString("Settings.Language.language", "de");
+	}
+	
+	public String getLanguageCountry() {
+		return this.app.config.getString("Settings.Language.country", "DE");
+	}
+	
+	public void setLanguage(String language, String country, String description) {
+		this.app.config.set("Settings.Language.language", language);
+		this.app.config.set("Settings.Language.country", country);
+		this.app.config.set("Settings.Language.description", description);
+		saveConfig();
 	}
 
 }

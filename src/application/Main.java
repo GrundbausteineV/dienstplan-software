@@ -2,20 +2,11 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.HTMLLayout;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-
-import util.logging.customHTMLLayout;
+import util.logging.Log;
 import yaml.file.*;
-import application.controller.login.loginController;
 import application.logic.login.loginLogic;
 import configuration.*;
 import javafx.application.Application;
@@ -33,8 +24,8 @@ import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
-	// Log-File
-	private Logger logger = Logger.getLogger("(GBSeV) Dienstplan Software");
+	// Log initialisieren
+	public Log log = null;
 
 	// Configuration Files
 	public FileConfiguration config = null;
@@ -43,56 +34,66 @@ public class Main extends Application {
 	// Import aller Logic-Klassen
 	public loginLogic loginLogicC = null;
 
-	// Import aller Controller-Klassen
-	public loginController controller = null;
-
 	// Import aller Config-Dateien
 	public appConfig appConfig = null;
+
+	FXMLLoader loader = null;
+	AnchorPane rootLayout = null;
+
+	private Stage primaryStage = null;
+	
+	private static Main instance;
 
 	public static void main(String[] args) {
 		launch(args);
 	}
 
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) throws IOException {
 
-		loginLogicC = new loginLogic(this);
-		appConfig = new appConfig(this);
+		Main.instance = this;
+		this.primaryStage = primaryStage;
 
-		initiateLogging();
+		this.log = new Log();
+
+		this.loginLogicC = new loginLogic(this);
+		this.appConfig = new appConfig(this);
 
 		if(appConfig.initiateConfig()){
-			logger.info("initialized: config.yml");
+			log.LogInfo("initialized: config.yml");
 		} else {
-			logger.error("error: config.yml couldn't be initiated.");
+			log.LogError("error: config.yml couldn't be initiated.");
 		}
 
 
-		try{
-			FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
+		loader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
 
-			loader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale("en", "EN")));
+		loader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale("en", "EN")));
 
-			AnchorPane rootLayout = loader.load();
-			Scene scene = new Scene(rootLayout);
+		rootLayout = loader.load();
 
-			controller = loader.getController();
-			controller.setMainApp(this);
+		Scene scene = new Scene(rootLayout);
 
-			//remove window decoration
-			primaryStage.initStyle(StageStyle.UNDECORATED);
-			primaryStage.setScene(scene);
-			primaryStage.setTitle("Grundbaustein e.V. Dienstplan-Software 2014");
-			//primaryStage.getIcons().add(new Image("/resources/icons/app-icon.png"));
-			//primaryStage.getIcons().add(new Image("/resources/icons/favicon_32.png"));
-			//primaryStage.getIcons().add(new Image("/resources/icons/favicon_64.png"));
-			primaryStage.getIcons().add(new Image("/resources/icons/blue-folder.png"));
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		//remove window decoration
+		this.primaryStage.initStyle(StageStyle.UNDECORATED);
+		this.primaryStage.setScene(scene);
+		this.primaryStage.setTitle("Grundbaustein e.V. Dienstplan-Software 2014");
+		//primaryStage.getIcons().add(new Image("/resources/icons/app-icon.png"));
+		//primaryStage.getIcons().add(new Image("/resources/icons/favicon_32.png"));
+		//primaryStage.getIcons().add(new Image("/resources/icons/favicon_64.png"));
+		this.primaryStage.getIcons().add(new Image("/resources/icons/application/blue-folder.png"));
+		this.primaryStage.show();
 
+	}
 
+	@Override
+	public void stop() {
+		shutdownApplication();
+	}
+
+	// static method to get instance of view
+	public static Main getInstance() {
+	        return instance;
 	}
 
 	public File getDataFolder() {
@@ -101,57 +102,29 @@ public class Main extends Application {
 		return (new File(currentDirectory.toString()));
 	}
 
-	public void LogInfo(String message) {
-		logger.info(message);
+	public void setAppLanguage(String language, String country) {
+		reloadLogin(new Locale(language, country));
+		log.LogInfo("Changed language to: " + language);
 	}
 
-	public void LogDebug(String message) {
-		logger.debug(message);
-	}
-
-	public void LogWarning(String message) {
-		logger.warn(message);
-	}
-
-	public void LogError(String message) {
-		logger.error(message);
-	}
-
-	public void LogError(String message, Throwable t) {
-		logger.error(message, t);
-	}
-
-	private void initiateLogging() {
+	private void reloadLogin(Locale locale) {
+		AnchorPane pane = null;
+		FXMLLoader fxmlLoader = null;
+		fxmlLoader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
+		fxmlLoader.setResources(ResourceBundle.getBundle("resources.localisation.local", locale));
 		try {
-			//SimpleLayout layout = new SimpleLayout();
-			HTMLLayout layout = new customHTMLLayout();
-			layout.setLocationInfo(true);
-			ConsoleAppender consoleAppender = new ConsoleAppender( layout );
-			logger.addAppender( consoleAppender );
-			FileAppender fileAppender = new FileAppender( layout, "logs/log-" + DateFormat.getDateInstance().format(new Date(System.currentTimeMillis())).replace(".", "-") + "_" + DateFormat.getTimeInstance().format(new Date(System.currentTimeMillis())).replace(":", "-") + ".html", false );
-			logger.addAppender( fileAppender );
-			// ALL | DEBUG | INFO | WARN | ERROR | FATAL | OFF:
-			logger.setLevel( Level.ALL );
-		} catch( Exception ex ) {
-			System.out.println( ex );
-			LogError("Error registering Logger", ex);
+			pane = fxmlLoader.load();
+		} catch (Exception ex) {
+			log.LogError("can't load /resources/fxml/login/login.fxml", ex);
 		}
-		logger.debug( "Debug-Meldungen: aktiviert" );
-		logger.info( "Info-Meldung: aktiviert" );
-		logger.warn( "Warn-Meldung: aktiviert" );
-		logger.error( "Error-Meldung: aktiviert" );
-		logger.fatal( "Fatal-Meldung: aktiviert" );
+
+		Scene scene = new Scene(pane);
+		this.primaryStage.setScene(scene);
+
 	}
 
-	/**
-    The <b>LocationInfo</b> option takes a boolean value. By
-    default, it is set to false which means there will be no location
-    information output by this layout. If the the option is set to
-    true, then the file name and line number of the statement
-    at the origin of the log statement will be output.
-
-    <p>If you are embedding this layout within an {@link
-    org.apache.log4j.net.SMTPAppender} then make sure to set the
-    <b>LocationInfo</b> option of that appender as well.
-	 */
+	private void shutdownApplication() {
+		log.LogInfo("Shutting down application...");
+		log.LogInfo("Shutdown successfull!");
+	}
 }
