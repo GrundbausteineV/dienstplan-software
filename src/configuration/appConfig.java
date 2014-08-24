@@ -60,9 +60,9 @@ public class appConfig {
 		getConfig();
 
 		if(this.app.config.getString("Credit.Author") == null)
-			this.app.config.set("Credit.Author", "Jan-Eric Dreﬂler");
+			this.app.config.set("Credit.Author", "Jan-Eric Dre√üler");
 		if(this.app.config.getString("Credit.Company") == null)
-			this.app.config.set("Credit.Company", "Gemeinschaft f¸r Medienkompetenz 'Grundbaustein e.V.'");
+			this.app.config.set("Credit.Company", "Gemeinschaft f√ºr Medienkompetenz 'Grundbaustein e.V.'");
 		if(this.app.config.getString("Credit.Version") == null)
 			this.app.config.set("Credit.Version", "v0.0.1");
 
