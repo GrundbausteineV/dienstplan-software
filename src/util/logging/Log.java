@@ -1,5 +1,6 @@
 package util.logging;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
 
@@ -27,7 +28,7 @@ public class Log {
 			layout.setLocationInfo(true);
 			ConsoleAppender consoleAppender = new ConsoleAppender( layout );
 			logger.addAppender( consoleAppender );
-			FileAppender fileAppender = new FileAppender( layout, "logs/log-" + DateFormat.getDateInstance().format(new Date(System.currentTimeMillis())).replace(".", "-") + "_" + DateFormat.getTimeInstance().format(new Date(System.currentTimeMillis())).replace(":", "-") + ".html", false );
+			FileAppender fileAppender = new FileAppender( layout, "logs" + File.separator + "log-" + DateFormat.getDateInstance().format(new Date(System.currentTimeMillis())).replace(".", "-") + "_" + DateFormat.getTimeInstance().format(new Date(System.currentTimeMillis())).replace(":", "-") + ".html", false );
 			logger.addAppender( fileAppender );
 			// ALL | DEBUG | INFO | WARN | ERROR | FATAL | OFF:
 			logger.setLevel( Level.ALL );

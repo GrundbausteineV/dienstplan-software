@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-	<project name="Dienstplan Software" default="bundle" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
-		<property environment="env"/>
-		<target name="init-fx-tasks">
+<project name="Dienstplan Software" default="bundle" basedir="."  xmlns:fx="javafx:com.sun.javafx.tools.ant">
+	<property environment="env"/>
+
+	<target name="init-fx-tasks">
 		<path id="fxant">
 			<filelist>
 				<file name="${java.home}\..\lib\ant-javafx.jar"/>
@@ -9,43 +10,33 @@
 			</filelist>
 		</path>
 	
-		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml"      
-			uri="javafx:com.sun.javafx.tools.ant"
-			classpathref="fxant"/>
+		<taskdef resource="com/sun/javafx/tools/ant/antlib.xml" uri="javafx:com.sun.javafx.tools.ant" classpathref="fxant"/>
 	</target>
 	<target name="setup-staging-area">
 		<delete dir="externalLibs" />
 		<delete dir="libs" />
 		<delete dir="project" />
 		<delete dir="projectRefs" />
-		
-		<!--<mkdir dir="externalLibs" />-->
-		
-		
+		<delete dir="build" />
 		<mkdir dir="project" />
-		<copy todir="project">
-			<fileset dir="./">
-				<include name="src/**" />
-			</fileset>
-		</copy>
-		
+			<copy todir="project">
+				<fileset dir="./">
+					<include name="src/**" />
+				</fileset>
+			</copy>				
 		<mkdir dir="projectRefs" />
 	</target>
 	<target name='do-compile'>
-		<delete dir="build" />
 		<mkdir dir="build/src" />
 		<mkdir dir="build/lib" />
 		<mkdir dir="build/classes" />
 	
-		<!-- Copy project-libs references -->
 		<copy todir="build/lib">
 			<fileset dir="lib">
+				<include name="**/*"/>
 			</fileset>
 		</copy>
 	
-		<!-- Copy project references -->
-	
-		<!-- Copy project sources itself -->
 		<copy todir="build/src">
 			<fileset dir="project/src">
 				<include name="**/*"/>
@@ -59,12 +50,11 @@
 				</fileset>
 			</classpath>
 		</javac>
-		
-		<!-- Copy over none Java-Files -->
+
 		<copy todir="build/classes">
-		<fileset dir="project/src">
-			<exclude name="**/*.java"/>
-		</fileset>
+			<fileset dir="project/src">
+				<exclude name="**/*.java"/>
+			</fileset>
 		</copy>
 
 	</target>
@@ -140,6 +130,5 @@
 		<delete file="dist/temp.jar"/>
 		<delete file="dist/bundle.jar"/>
 		<delete dir="dist/lib" />
-		<delete dir="dist/libs" />
 	</target>
 </project>

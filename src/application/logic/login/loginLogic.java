@@ -1,5 +1,6 @@
 package application.logic.login;
 
+import util.properties.propertiesFile;
 import application.Main;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -37,11 +38,25 @@ public class loginLogic {
 			String languageCode = "de";
 			String countryCode = "DE";
 			this.app.appConfig.setLanguage(languageCode, countryCode, "Deutsch");
+			this.app.languageIcon.set(0, countryCode);
 			app.setAppLanguage(languageCode, countryCode);
-		} else {
+		} else if(language.equalsIgnoreCase("English")){
 			String languageCode = "en";
-			String countryCode = "EN";
+			String countryCode = "GB";
 			this.app.appConfig.setLanguage(languageCode, countryCode, "English");
+			this.app.languageIcon.set(0, countryCode);
+			app.setAppLanguage(languageCode, countryCode);
+		} else if(language.equalsIgnoreCase("Français")){
+			String languageCode = "fr";
+			String countryCode = "FR";
+			this.app.appConfig.setLanguage(languageCode, countryCode, "Français");
+			this.app.languageIcon.set(0, countryCode);
+			app.setAppLanguage(languageCode, countryCode);
+		}  else {
+			propertiesFile prop = new propertiesFile(language + ".properties");
+			String languageCode = prop.getPropertyValue("key.init_languagecode");
+			String countryCode = prop.getPropertyValue("key.init_country");
+			this.app.appConfig.setLanguage(languageCode, countryCode, prop.getPropertyValue("key.init_description"));
 			app.setAppLanguage(languageCode, countryCode);
 		}
 	}

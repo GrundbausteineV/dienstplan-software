@@ -5,13 +5,17 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import util.localization.initLanguages;
 import util.logging.Log;
 import yaml.file.*;
 import application.logic.login.loginLogic;
 import configuration.*;
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -36,6 +40,8 @@ public class Main extends Application {
 
 	// Import aller Config-Dateien
 	public appConfig appConfig = null;
+	
+	public initLanguages initLanguage;
 
 	FXMLLoader loader = null;
 	AnchorPane rootLayout = null;
@@ -43,6 +49,10 @@ public class Main extends Application {
 	private Stage primaryStage = null;
 	
 	private static Main instance;
+	
+	public ObservableList<MenuItem> languageList = FXCollections.observableArrayList();
+	public ObservableList<String> languageIcon = FXCollections.observableArrayList();
+
 
 	public static void main(String[] args) {
 		launch(args);
@@ -55,9 +65,14 @@ public class Main extends Application {
 		this.primaryStage = primaryStage;
 
 		this.log = new Log();
-
-		this.loginLogicC = new loginLogic(this);
 		this.appConfig = new appConfig(this);
+		this.initLanguage = new initLanguages(this);
+		
+		if(initLanguage.initiateLanguages()){
+			log.LogInfo("Languages initialized");
+		} else {
+			log.LogError("error: Languages couldn't be initiated.");
+		}
 
 		if(appConfig.initiateConfig()){
 			log.LogInfo("initialized: config.yml");
@@ -65,10 +80,13 @@ public class Main extends Application {
 			log.LogError("error: config.yml couldn't be initiated.");
 		}
 
+		this.loginLogicC = new loginLogic(this);
+
 
 		loader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
 
-		loader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale("en", "EN")));
+		loader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale(config.getString("Settings.Language.language"), config.getString("Settings.Language.country"))));
+		languageIcon.add(0, config.getString("Settings.Language.country"));
 
 		rootLayout = loader.load();
 

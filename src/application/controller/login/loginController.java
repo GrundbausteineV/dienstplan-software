@@ -6,15 +6,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-public class loginController {
-
-	
+public class loginController {	
 
 	@FXML
 	private Button login_button_login;
@@ -30,6 +27,8 @@ public class loginController {
 	private MenuBar login_menubar_language;
 	@FXML
 	private Menu login_menu_language;
+	@FXML
+	private ImageView login_icon_language;
 
 	/**
 	 * The constructor.
@@ -45,13 +44,7 @@ public class loginController {
 	@FXML
 	private void initialize() {
 		
-		MenuItem german = new MenuItem("Deutsch");
-		german.setGraphic(new ImageView(new Image(Main.getInstance().getClass().getResourceAsStream("/resources/icons/flags/DE.png"))));
-		MenuItem english = new MenuItem("English");		
-		english.setGraphic(new ImageView(new Image(Main.getInstance().getClass().getResourceAsStream("/resources/icons/flags/GB.png"))));
-		
-		this.login_menu_language.getItems().add(german);
-		this.login_menu_language.getItems().add(english);
+		this.login_menu_language.getItems().addAll(Main.getInstance().languageList);
 
 		//int index = languageList.indexOf(Main.getInstance().appConfig.getLanguageDescription());
 		//this.login_choicebox_language.getSelectionModel().select(languageList.get(index));
@@ -64,12 +57,13 @@ public class loginController {
 			Main.getInstance().loginLogicC.displayInfoLayer();
 		});
 		
-		german.setOnAction((event) -> {
-			Main.getInstance().loginLogicC.setLanguage("Deutsch");
+		Main.getInstance().languageList.forEach(item -> {
+			item.setOnAction((event) -> {
+				Main.getInstance().loginLogicC.setLanguage(item.getText());
+			});
 		});
-		english.setOnAction((event) -> {
-			Main.getInstance().loginLogicC.setLanguage("English");
-		});
+		
+		this.login_icon_language.setImage(new Image("/resources/icons/flags/" + Main.getInstance().languageIcon.get(0) + ".png"));
 		
 	}
 	

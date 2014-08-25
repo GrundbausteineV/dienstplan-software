@@ -20,7 +20,7 @@ public class appConfig {
 			if(dir.exists() == false) {
 				dir.mkdir();
 			}
-			this.app.configFile = new File("configs/config.yml");
+			this.app.configFile = new File("configs" + File.separator + "config.yml");
 			if(this.app.configFile.exists() == false) {
 				try {
 					this.app.configFile.createNewFile();
