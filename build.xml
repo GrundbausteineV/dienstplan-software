@@ -18,6 +18,7 @@
 		<delete dir="project" />
 		<delete dir="projectRefs" />
 		<delete dir="build" />
+		<delete dir="dist" />
 		<mkdir dir="project" />
 			<copy todir="project">
 				<fileset dir="./">
