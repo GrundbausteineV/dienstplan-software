@@ -57,6 +57,10 @@ public class loginController {
 			Main.getInstance().loginLogicC.displayInfoLayer();
 		});
 		
+		this.login_button_login.setOnAction((event) -> {
+			Main.getInstance().loadOverview();
+		});
+		
 		Main.getInstance().languageList.forEach(item -> {
 			item.setOnAction((event) -> {
 				Main.getInstance().loginLogicC.setLanguage(item.getText());

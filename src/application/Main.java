@@ -46,12 +46,17 @@ public class Main extends Application {
 	FXMLLoader loader = null;
 	AnchorPane rootLayout = null;
 
+	private Stage hiddenStage = null;
+	private Stage overviewStage = null;
 	private Stage primaryStage = null;
 	
 	private static Main instance;
 	
 	public ObservableList<MenuItem> languageList = FXCollections.observableArrayList();
 	public ObservableList<String> languageIcon = FXCollections.observableArrayList();
+	
+	private String applicationTitle = "Grundbaustein e.V. Dienstplan-Software 2014";
+	private String applicationIcon = "/resources/icons/application/blue-folder.png";
 
 
 	public static void main(String[] args) {
@@ -62,6 +67,10 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws IOException {
 
 		Main.instance = this;
+		
+		this.hiddenStage = new Stage();
+		this.hiddenStage.initStyle(StageStyle.TRANSPARENT);
+		
 		this.primaryStage = primaryStage;
 
 		this.log = new Log();
@@ -95,11 +104,11 @@ public class Main extends Application {
 		//remove window decoration
 		this.primaryStage.initStyle(StageStyle.UNDECORATED);
 		this.primaryStage.setScene(scene);
-		this.primaryStage.setTitle("Grundbaustein e.V. Dienstplan-Software 2014");
+		this.primaryStage.setTitle(applicationTitle);
 		//primaryStage.getIcons().add(new Image("/resources/icons/app-icon.png"));
 		//primaryStage.getIcons().add(new Image("/resources/icons/favicon_32.png"));
 		//primaryStage.getIcons().add(new Image("/resources/icons/favicon_64.png"));
-		this.primaryStage.getIcons().add(new Image("/resources/icons/application/blue-folder.png"));
+		this.primaryStage.getIcons().add(new Image(applicationIcon));
 		this.primaryStage.show();
 
 	}
@@ -140,9 +149,32 @@ public class Main extends Application {
 		this.primaryStage.setScene(scene);
 
 	}
+	
+	public void loadOverview() {
+		AnchorPane pane = null;
+		FXMLLoader fxmlLoader = null;
+		fxmlLoader = new FXMLLoader(this.getClass().getResource("/resources/fxml/overview/overview.fxml"));
+		fxmlLoader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale(config.getString("Settings.Language.language", "de"), config.getString("Settings.Language.country", "DE"))));
+		try {
+			pane = fxmlLoader.load();
+		} catch (Exception ex) {
+			log.LogError("can't load /resources/fxml/overview/overview.fxml", ex);
+		}
+
+		this.primaryStage.hide();
+		Scene scene = new Scene(pane);
+		this.primaryStage.hide();
+		this.overviewStage = new Stage();
+		this.overviewStage.initStyle(StageStyle.DECORATED);
+		this.overviewStage.setTitle(applicationTitle);
+		this.overviewStage.getIcons().add(new Image(applicationIcon));
+		this.overviewStage.setScene(scene);
+		this.overviewStage.show();
+	}
 
 	private void shutdownApplication() {
 		log.LogInfo("Shutting down application...");
 		log.LogInfo("Shutdown successfull!");
+		this.hiddenStage.hide();
 	}
 }
