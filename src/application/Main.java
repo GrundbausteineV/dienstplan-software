@@ -9,6 +9,7 @@ import util.localization.initLanguages;
 import util.logging.Log;
 import yaml.file.*;
 import application.logic.login.loginLogic;
+import application.logic.overview.overviewLogic;
 import configuration.*;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -37,6 +38,7 @@ public class Main extends Application {
 
 	// Import aller Logic-Klassen
 	public loginLogic loginLogicC = null;
+	public overviewLogic overviewLogicC = null;
 
 	// Import aller Config-Dateien
 	public appConfig appConfig = null;
@@ -53,7 +55,9 @@ public class Main extends Application {
 	private static Main instance;
 	
 	public ObservableList<MenuItem> languageList = FXCollections.observableArrayList();
-	public ObservableList<String> languageIcon = FXCollections.observableArrayList();
+	public ObservableList<String> languageIcon = FXCollections.observableArrayList();	
+
+	public ObservableList<String> planOverview = FXCollections.observableArrayList();
 	
 	private String applicationTitle = "Grundbaustein e.V. Dienstplan-Software 2014";
 	private String applicationIcon = "/resources/icons/application/blue-folder.png";
@@ -151,6 +155,10 @@ public class Main extends Application {
 	}
 	
 	public void loadOverview() {
+		
+		this.overviewLogicC = new overviewLogic(this);
+		this.overviewLogicC.initPlanOverview();
+		
 		AnchorPane pane = null;
 		FXMLLoader fxmlLoader = null;
 		fxmlLoader = new FXMLLoader(this.getClass().getResource("/resources/fxml/overview/overview.fxml"));
@@ -170,6 +178,7 @@ public class Main extends Application {
 		this.overviewStage.getIcons().add(new Image(applicationIcon));
 		this.overviewStage.setScene(scene);
 		this.overviewStage.show();
+		
 	}
 
 	private void shutdownApplication() {

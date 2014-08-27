@@ -3,13 +3,29 @@
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.overview.overviewController">
-<children><FlowPane layoutX="200.0" layoutY="100.0" prefHeight="400.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-<children><Button fx:id="overview_button_new" alignment="CENTER" contentDisplay="TOP" maxHeight="100.0" minHeight="100.0" minWidth="100.0" mnemonicParsing="false" text="%key.overview_new_plan">
-<FlowPane.margin>
-<Insets left="10.0" top="10.0" />
-</FlowPane.margin></Button>
-</children></FlowPane>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="480.0" minWidth="-Infinity" prefWidth="640.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.controller.overview.overviewController">
+<children><SplitPane dividerPositions="0.3" focusTraversable="true" prefHeight="480.0" prefWidth="640.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+<children><ImageView fx:id="overview_imageview_logo" fitHeight="150.0" fitWidth="200.0" layoutX="19.0" layoutY="164.0" opacity="0.2" pickOnBounds="true" preserveRatio="true" /><ListView fx:id="overview_listview_plans" cacheShape="false" prefHeight="478.0" prefWidth="187.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<padding>
+<Insets bottom="1.0" left="1.0" right="1.0" top="1.0" />
+</padding></ListView>
+</children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+<children><Pane prefHeight="478.0" prefWidth="444.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<children><HBox alignment="CENTER" layoutX="13.0" layoutY="14.0" prefHeight="40.0" prefWidth="418.0">
+<children><Label fx:id="overview_label_name" alignment="CENTER" layoutX="192.0" layoutY="14.0" prefHeight="35.0" prefWidth="416.0" text="Label" textAlignment="CENTER">
+<font>
+<Font name="System Bold Italic" size="24.0" />
+</font></Label>
+</children></HBox>
+</children></Pane>
+</children></AnchorPane>
+  </items>
+</SplitPane>
 </children></AnchorPane>
