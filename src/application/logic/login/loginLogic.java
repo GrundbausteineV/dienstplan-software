@@ -37,19 +37,22 @@ public class loginLogic {
 		if(language.equalsIgnoreCase("Deutsch")) {
 			String languageCode = "de";
 			String countryCode = "DE";
-			this.app.appConfig.setLanguage(languageCode, countryCode, "Deutsch");
+			//this.app.appConfig.setLanguage(languageCode, countryCode, "Deutsch");
+			this.app.settings.setLanguage(languageCode, countryCode, "Deutsch");
 			this.app.languageIcon.set(0, countryCode);
 			app.setAppLanguage(languageCode, countryCode);
 		} else if(language.equalsIgnoreCase("English")){
 			String languageCode = "en";
 			String countryCode = "GB";
-			this.app.appConfig.setLanguage(languageCode, countryCode, "English");
+			//this.app.appConfig.setLanguage(languageCode, countryCode, "English");
+			this.app.settings.setLanguage(languageCode, countryCode, "English");
 			this.app.languageIcon.set(0, countryCode);
 			app.setAppLanguage(languageCode, countryCode);
 		} else if(language.equalsIgnoreCase("Français")){
 			String languageCode = "fr";
 			String countryCode = "FR";
-			this.app.appConfig.setLanguage(languageCode, countryCode, "Français");
+			//this.app.appConfig.setLanguage(languageCode, countryCode, "Français");
+			this.app.settings.setLanguage(languageCode, countryCode, "Français");
 			this.app.languageIcon.set(0, countryCode);
 			app.setAppLanguage(languageCode, countryCode);
 		}  else {

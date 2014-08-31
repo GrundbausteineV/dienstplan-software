@@ -19,74 +19,58 @@ public class SQLite {
 	}
 
 	public int create(String statement) {
-
-		connect();
 		
 		try {
 			stmt = conn.createStatement();
 			int rs = stmt.executeUpdate(statement);
-			disconnect();
 			return rs;
 		} catch (Exception e) {
 			this.app.log.LogError("", e);
-			disconnect();
 			return 0;
 		}
 
 	}
 
 	public int update(String statement) {
-
-		connect();
 		
 		try {
 			stmt = conn.createStatement();
 			int rs = stmt.executeUpdate(statement);
-			disconnect();
 			return rs;
 		} catch (Exception e) {
 			this.app.log.LogError("", e);
-			disconnect();
 			return 0;
 		}
 
 	}
 
 	public int insert(String statement) {
-
-		connect();
 		
 		try {
 			stmt = conn.createStatement();
 			int rs = stmt.executeUpdate(statement);
-			disconnect();
 			return rs;
 		} catch (Exception e) {
 			this.app.log.LogError("", e);
-			disconnect();
 			return 0;
 		}
 
 	}
 
 	public ResultSet select(String statement) {
-
-		connect();
 		
 		try {
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(statement);
-			disconnect();
 			return rs;
 		} catch (Exception e) {
 			this.app.log.LogError("", e);
-			disconnect();
 			return null;
 		}
 
 	}
 
-	private void connect() {
+	public void connect() {
 
 		try {
 			Class.forName("org.sqlite.JDBC");
@@ -98,7 +82,7 @@ public class SQLite {
 
 	}
 
-	private void disconnect() {
+	public void disconnect() {
 
 		try {
 			stmt.close();

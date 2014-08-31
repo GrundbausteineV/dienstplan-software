@@ -96,7 +96,7 @@
 			<manifest>
 				<attribute name="Implementation-Vendor" value="Grundbaustein e.V."/>
 				<attribute name="Implementation-Title" value="Dienstplan Software"/>
-				<attribute name="Implementation-Version" value="0.0.1-SNAPSHOT"/>
+				<attribute name="Implementation-Version" value="0.0.2-SNAPSHOT"/>
 				<attribute name="JavaFX-Feature-Proxy" value="None"/>
 			</manifest>
 		</fx:jar>
@@ -115,7 +115,7 @@
 			<manifest>
 		       	<attribute name="Implementation-Vendor" value="Grundbaustein e.V."/>
 		       	<attribute name="Implementation-Title" value="Dienstplan Software"/>
-		       	<attribute name="Implementation-Version" value="0.0.1-SNAPSHOT"/>
+		       	<attribute name="Implementation-Version" value="0.0.2-SNAPSHOT"/>
 		       	<attribute name="JavaFX-Feature-Proxy" value="None"/>
                 <!--<attribute name="Main-Class" value="com.javafx.main.Main" />-->
 		        <attribute name="Main-Class" value="application.Main" />
@@ -124,7 +124,7 @@
 			</manifest>
 	    </jar>
 
-		<zip destfile="dist/dienstplan-0.0.1-SNAPSHOT.jar">
+		<zip destfile="dist/dienstplan-0.0.2-SNAPSHOT.jar">
 	        <zipfileset src="dist/bundle.jar" excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA , META-INF/maven/**,META-INF/*.txt" />
 	    </zip>
 

@@ -1,5 +1,8 @@
 package application.controller.overview;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import application.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -39,7 +42,14 @@ public class overviewController {
 		//this.overview_listview_plans.setOpacity(0.75);
 		
 		this.overview_listview_plans.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-		    this.overview_label_name.setText(newValue);
+			ResourceBundle langBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(Main.getInstance().config.getString("Settings.Language.language", "de"), Main.getInstance().config.getString("Settings.Language.country", "DE")));
+			String newPlanString = langBundle.getString("key.overview_new_plan");
+			if(newValue.equalsIgnoreCase(newPlanString)) {
+				this.overview_label_name.setText(newValue + "Neuer Plan");
+			} else {
+				this.overview_label_name.setText(newValue);
+			}
+			
 		});
 	}
 }

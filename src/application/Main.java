@@ -2,15 +2,19 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import util.encryption.CryptoException;
+import util.encryption.FileEncryptor;
 import util.localization.initLanguages;
 import util.logging.Log;
 import yaml.file.*;
 import application.logic.login.loginLogic;
 import application.logic.overview.overviewLogic;
 import configuration.*;
+import database.sqlite.SQLite;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +32,10 @@ import javafx.stage.StageStyle;
  */
 
 public class Main extends Application {
+	
+	public final String CREDIT_AUTHOR 			= "Jan-Eric Dreßler";
+	public final String CREDIT_ORGANIZATION 	= "Gemeinschaft für Medienkompetenz Grundbaustein e.V.";
+	public final String CREDIT_VERSION 			= "0.0.2";
 
 	// Log initialisieren
 	public Log log = null;
@@ -35,6 +43,9 @@ public class Main extends Application {
 	// Configuration Files
 	public FileConfiguration config = null;
 	public File configFile = null;
+	
+	// H2 Database class
+	public SQLite sqliteDatabase = null;
 
 	// Import aller Logic-Klassen
 	public loginLogic loginLogicC = null;
@@ -42,6 +53,7 @@ public class Main extends Application {
 
 	// Import aller Config-Dateien
 	public appConfig appConfig = null;
+	public settings settings = null;
 	
 	public initLanguages initLanguage;
 
@@ -68,7 +80,7 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws IOException {
+	public void start(Stage primaryStage) throws IOException, SQLException {
 
 		Main.instance = this;
 		
@@ -78,14 +90,25 @@ public class Main extends Application {
 		this.primaryStage = primaryStage;
 
 		this.log = new Log();
+		this.sqliteDatabase = new SQLite(this);
 		this.appConfig = new appConfig(this);
 		this.initLanguage = new initLanguages(this);
+		
+		this.sqliteDatabase.connect();
+		
+		/*if(this.h2Database.connectDB()){
+			log.LogInfo("H2 Database initialized");
+		} else {
+			log.LogError("H2 Database couldn't be initiated.");
+		}*/
 		
 		if(initLanguage.initiateLanguages()){
 			log.LogInfo("Languages initialized");
 		} else {
 			log.LogError("error: Languages couldn't be initiated.");
 		}
+		
+		this.settings = new settings(this);
 
 		if(appConfig.initiateConfig()){
 			log.LogInfo("initialized: config.yml");
@@ -98,8 +121,8 @@ public class Main extends Application {
 
 		loader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
 
-		loader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale(config.getString("Settings.Language.language"), config.getString("Settings.Language.country"))));
-		languageIcon.add(0, config.getString("Settings.Language.country"));
+		loader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale(settings.getLanguageLanguage(), settings.getLanguageCountry())));
+		languageIcon.add(0, settings.getLanguageCountry());
 
 		rootLayout = loader.load();
 
@@ -162,7 +185,12 @@ public class Main extends Application {
 		AnchorPane pane = null;
 		FXMLLoader fxmlLoader = null;
 		fxmlLoader = new FXMLLoader(this.getClass().getResource("/resources/fxml/overview/overview.fxml"));
-		fxmlLoader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale(config.getString("Settings.Language.language", "de"), config.getString("Settings.Language.country", "DE"))));
+		try {
+			fxmlLoader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale(settings.getLanguageLanguage(), settings.getLanguageCountry())));
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		try {
 			pane = fxmlLoader.load();
 		} catch (Exception ex) {
@@ -182,8 +210,35 @@ public class Main extends Application {
 	}
 
 	private void shutdownApplication() {
+		
+		this.sqliteDatabase.disconnect();
+		
 		log.LogInfo("Shutting down application...");
 		log.LogInfo("Shutdown successfull!");
 		this.hiddenStage.hide();
+		this.planOverview.forEach(item -> {
+			File inputFile = new File(this.getDataFolder(), "saves" + File.separator + item);
+			File encryptedFile = new File(this.getDataFolder(), "saves" + File.separator + item + ".enc");
+
+			if(item.equalsIgnoreCase("Neuer Dienstplan")) {
+			} else {
+				try {
+					FileEncryptor.encrypt("JEDressler", "Juhu", inputFile, encryptedFile);
+					try{
+			    		if(inputFile.delete()){
+			    			System.out.println(inputFile.getName() + " is deleted!");
+			    		}else{
+			    			System.out.println("Delete operation is failed.");
+			    		}				 
+			    	}catch(Exception e){				 
+			    		e.printStackTrace();				 
+			    	}
+				} catch (CryptoException ex) {
+					System.out.println(ex.getMessage());
+					ex.printStackTrace();
+				}
+			}
+			
+		});
 	}
 }
