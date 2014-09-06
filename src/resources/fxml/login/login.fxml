@@ -19,7 +19,7 @@
     <Menu fx:id="login_menu_language" mnemonicParsing="false" text="%key.login_language" />
   </menus>
 </MenuBar>
-</children></HBox><TextField fx:id="login_textfield_username" layoutX="60.0" layoutY="89.0" minWidth="180.0" /><Label layoutX="60.0" layoutY="59.0" text="%key.login_username" /><Label layoutX="60.0" layoutY="145.0" text="%key.login_password" /><PasswordField fx:id="login_passwordfield_password" layoutX="60.0" layoutY="173.0" minWidth="180.0" /><Button fx:id="login_button_login" layoutX="127.0" layoutY="217.0" mnemonicParsing="false" text="%key.login_login" /><HBox alignment="CENTER" layoutY="261.0" prefHeight="37.0" prefWidth="300.0">
+</children></HBox><TextField fx:id="login_textfield_username" layoutX="60.0" layoutY="89.0" minWidth="180.0" /><Label layoutX="60.0" layoutY="59.0" text="%key.login_username" /><Label layoutX="60.0" layoutY="145.0" text="%key.login_password" /><PasswordField fx:id="login_passwordfield_password" layoutX="60.0" layoutY="173.0" minWidth="180.0" /><Button fx:id="login_button_login" defaultButton="true" layoutX="127.0" layoutY="217.0" mnemonicParsing="false" text="%key.login_login" /><HBox alignment="CENTER" layoutY="261.0" prefHeight="37.0" prefWidth="300.0">
 <children><HBox alignment="CENTER_LEFT" layoutX="39.0" layoutY="-4.5" prefHeight="37.0" prefWidth="209.0">
 <children><Button fx:id="login_button_info" layoutX="14.0" layoutY="6.0" mnemonicParsing="false" text="%key.login_help" />
 </children></HBox><HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0">
@@ -28,5 +28,5 @@
 </children>
 <padding>
 <Insets left="10.0" right="10.0" />
-</padding></HBox>
+</padding></HBox><Button fx:id="login_button_user" graphicTextGap="0.0" layoutX="240.0" layoutY="89.0" mnemonicParsing="false" />
 </children></AnchorPane>

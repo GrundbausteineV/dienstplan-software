@@ -8,6 +8,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -17,6 +18,8 @@ public class loginController {
 	private Button login_button_login;
 	@FXML
 	private Button login_button_info;
+	@FXML
+	private Button login_button_user;
 	@FXML
 	private Button login_button_quit;
 	@FXML
@@ -56,9 +59,18 @@ public class loginController {
 		this.login_button_info.setOnAction((event) -> {
 			Main.getInstance().loginLogicC.displayInfoLayer();
 		});
-		
+
 		this.login_button_login.setOnAction((event) -> {
-			Main.getInstance().loadOverview();
+			if(this.login_textfield_username.getText().equalsIgnoreCase("")) {
+				Main.getInstance().showTooltip(Main.getInstance().primaryStage, this.login_textfield_username, Main.getInstance().resourceBundle.getString("key.login_tooltip_fillin_username"), null);
+				return;
+			} else if(this.login_passwordfield_password.getText().equalsIgnoreCase("")) {
+				Main.getInstance().showTooltip(Main.getInstance().primaryStage, this.login_passwordfield_password, Main.getInstance().resourceBundle.getString("key.login_tooltip_fillin_password"), null);
+				return;
+			}
+			if(!Main.getInstance().loginLogicC.checkUsername(this.login_textfield_username, this.login_textfield_username.getText(), this.login_passwordfield_password.getText())) {
+				Main.getInstance().showTooltip(Main.getInstance().primaryStage, this.login_button_login, Main.getInstance().resourceBundle.getString("key.login_tooltip_error_login"), null);
+			}
 		});
 		
 		Main.getInstance().languageList.forEach(item -> {
@@ -68,11 +80,16 @@ public class loginController {
 		});
 		
 		this.login_icon_language.setImage(new Image("/resources/icons/flags/" + Main.getInstance().languageIcon.get(0) + ".png"));
+		ImageView addUser = new ImageView(new Image("/resources/icons/application/user_add_32.png"));
+		addUser.setFitHeight(17);
+		addUser.setFitWidth(17);
+		this.login_button_user.setGraphic(addUser);
+		this.login_button_user.setTooltip(new Tooltip(Main.getInstance().resourceBundle.getString("key.login_tooltip_adduser")));
 		
-	}
-	
-	public void setLabel(String text){
-		this.login_textfield_username.setText(text);
+		this.login_button_user.setOnAction((event) -> {
+			Main.getInstance().loginLogicC.displayRegisterUserLayer();
+		});
+		
 	}
 
 }

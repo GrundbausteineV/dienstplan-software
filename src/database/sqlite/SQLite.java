@@ -2,8 +2,10 @@ package database.sqlite;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import application.Main;
@@ -16,6 +18,25 @@ public class SQLite {
 
 	public SQLite(Main app){
 		this.app = app;
+		
+		File dir = new File(this.app.getDataFolder() + File.separator + this.app.DATABASE_DIRECTORY);
+		if(dir.exists() == false) {
+			dir.mkdir();
+		}
+		
+	}
+	
+	public ResultSet getMetaData() {
+		DatabaseMetaData md;
+		try {
+			md = conn.getMetaData();
+			ResultSet rs = md.getTables(null, null, "%", null);
+			return rs;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	public int create(String statement) {
@@ -70,11 +91,11 @@ public class SQLite {
 
 	}
 
-	public void connect() {
-
+	public void connect(String directory, String database) {		
+		
 		try {
 			Class.forName("org.sqlite.JDBC");
-			this.conn = DriverManager.getConnection("jdbc:sqlite:" + this.app.getDataFolder() + File.separator + "configs" + File.separator + "settings.db");
+			this.conn = DriverManager.getConnection("jdbc:sqlite:" + this.app.getDataFolder() + File.separator + directory + File.separator + database);
 			this.app.log.LogDebug("Successfully connected to Database.");
 		} catch (Exception e) {
 			this.app.log.LogError("", e);

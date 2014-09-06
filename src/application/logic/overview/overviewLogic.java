@@ -22,7 +22,7 @@ public class overviewLogic {
 	
 	public void initPlanOverview() {
 		
-		ResourceBundle langBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(this.app.config.getString("Settings.Language.language", "de"), this.app.config.getString("Settings.Language.country", "DE")));
+		ResourceBundle langBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(this.app.settings.getLanguageLanguage(), this.app.settings.getLanguageCountry()));
 		this.app.planOverview.add(langBundle.getString("key.overview_new_plan"));
 		
 		File dir = new File(this.app.getDataFolder(), "saves" + File.separator);

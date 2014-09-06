@@ -2,7 +2,6 @@ package application;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -11,6 +10,7 @@ import util.encryption.FileEncryptor;
 import util.localization.initLanguages;
 import util.logging.Log;
 import yaml.file.*;
+import application.logic.login.createUserLogic;
 import application.logic.login.loginLogic;
 import application.logic.overview.overviewLogic;
 import configuration.*;
@@ -19,23 +19,41 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Control;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * Hello world!
- *
- */
+* <h1>Dienstplan Software</h1>
+* Die Dienstplan Software soll es pädagogischen Einrichtungen
+* und kleinen Firmen erleichtern, die regelmäßige Pflege
+* von Dienstplänen durch eine geeignete Software zu erleichtern.
+* <p>
+* <b>Hinweis:</b> Wir sind stets darauf aus, unseren Code zu kommentieren
+* und so dritten zu ermöglichen, diesen nachzuvollziehen.
+*
+* @author  Jan-Eric Dreßler
+* @version 0.0.2
+* @since   2014-08-14
+*/
 
 public class Main extends Application {
 	
 	public final String CREDIT_AUTHOR 			= "Jan-Eric Dreßler";
 	public final String CREDIT_ORGANIZATION 	= "Gemeinschaft für Medienkompetenz Grundbaustein e.V.";
 	public final String CREDIT_VERSION 			= "0.0.2";
+	public final String DATABASE_DIRECTORY		= "settings";
+	public final String DATABASE_FILE			= "settings.db";
+	public final String PASSWORD_SALT			= "g867Rzu7657F6tdf7d758F687RfHfr4fgFDhD56ffdZtZr67R7RFGFGUGzuTRDTGUt2TGT";
+	
+	public ResourceBundle resourceBundle = null;
 
 	// Log initialisieren
 	public Log log = null;
@@ -50,9 +68,10 @@ public class Main extends Application {
 	// Import aller Logic-Klassen
 	public loginLogic loginLogicC = null;
 	public overviewLogic overviewLogicC = null;
+	public createUserLogic createUserLogicC = null;
 
 	// Import aller Config-Dateien
-	public appConfig appConfig = null;
+	//public appConfig appConfig = null;
 	public settings settings = null;
 	
 	public initLanguages initLanguage;
@@ -62,7 +81,8 @@ public class Main extends Application {
 
 	private Stage hiddenStage = null;
 	private Stage overviewStage = null;
-	private Stage primaryStage = null;
+	public Stage primaryStage = null;
+	public Stage registerUserStage = null;
 	
 	private static Main instance;
 	
@@ -80,7 +100,7 @@ public class Main extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws IOException, SQLException {
+	public void start(Stage primaryStage) {
 
 		Main.instance = this;
 		
@@ -91,16 +111,10 @@ public class Main extends Application {
 
 		this.log = new Log();
 		this.sqliteDatabase = new SQLite(this);
-		this.appConfig = new appConfig(this);
+		//this.appConfig = new appConfig(this);
 		this.initLanguage = new initLanguages(this);
 		
-		this.sqliteDatabase.connect();
-		
-		/*if(this.h2Database.connectDB()){
-			log.LogInfo("H2 Database initialized");
-		} else {
-			log.LogError("H2 Database couldn't be initiated.");
-		}*/
+		this.sqliteDatabase.connect("settings", "settings.db");
 		
 		if(initLanguage.initiateLanguages()){
 			log.LogInfo("Languages initialized");
@@ -110,21 +124,28 @@ public class Main extends Application {
 		
 		this.settings = new settings(this);
 
-		if(appConfig.initiateConfig()){
+		/*if(appConfig.initiateConfig()){
 			log.LogInfo("initialized: config.yml");
 		} else {
 			log.LogError("error: config.yml couldn't be initiated.");
-		}
+		}*/
 
 		this.loginLogicC = new loginLogic(this);
+		this.createUserLogicC = new createUserLogic(this);
 
 
 		loader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
 
-		loader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale(settings.getLanguageLanguage(), settings.getLanguageCountry())));
+		this.resourceBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(settings.getLanguageLanguage(), settings.getLanguageCountry()));
+		loader.setResources(this.resourceBundle);
 		languageIcon.add(0, settings.getLanguageCountry());
 
-		rootLayout = loader.load();
+		try {
+			rootLayout = loader.load();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		Scene scene = new Scene(rootLayout);
 
@@ -160,12 +181,27 @@ public class Main extends Application {
 		reloadLogin(new Locale(language, country));
 		log.LogInfo("Changed language to: " + language);
 	}
+	
+	public void showTooltip(Stage owner, Control control, String tooltipText, ImageView tooltipGraphic)
+		{
+		    Point2D p = control.localToScene(0.0, 0.0);
+
+		    final Tooltip customTooltip = new Tooltip();
+		    customTooltip.setText(tooltipText);
+
+		    control.setTooltip(customTooltip);
+		    customTooltip.setAutoHide(true);
+
+		    customTooltip.show(owner, p.getX() + control.getScene().getX() + control.getScene().getWindow().getX(), p.getY() + control.getScene().getY() + control.getScene().getWindow().getY());
+
+		}
 
 	private void reloadLogin(Locale locale) {
 		AnchorPane pane = null;
 		FXMLLoader fxmlLoader = null;
 		fxmlLoader = new FXMLLoader(this.getClass().getResource("/resources/fxml/login/login.fxml"));
-		fxmlLoader.setResources(ResourceBundle.getBundle("resources.localisation.local", locale));
+		this.resourceBundle = ResourceBundle.getBundle("resources.localisation.local", locale);
+		fxmlLoader.setResources(this.resourceBundle);
 		try {
 			pane = fxmlLoader.load();
 		} catch (Exception ex) {
@@ -185,12 +221,8 @@ public class Main extends Application {
 		AnchorPane pane = null;
 		FXMLLoader fxmlLoader = null;
 		fxmlLoader = new FXMLLoader(this.getClass().getResource("/resources/fxml/overview/overview.fxml"));
-		try {
-			fxmlLoader.setResources(ResourceBundle.getBundle("resources.localisation.local", new Locale(settings.getLanguageLanguage(), settings.getLanguageCountry())));
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.resourceBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(settings.getLanguageLanguage(), settings.getLanguageCountry()));
+		fxmlLoader.setResources(this.resourceBundle);
 		try {
 			pane = fxmlLoader.load();
 		} catch (Exception ex) {

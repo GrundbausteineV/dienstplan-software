@@ -33,7 +33,7 @@ public class overviewController {
 	 * after the fxml file has been loaded.
 	 */
 	@FXML
-	private void initialize() {
+	private void initialize(){
 		/*this.overview_imageview_logo.setImage(new Image("/resources/icons/application/blue-folder.png"));
 		this.overview_imageview_logo.setLayoutX(19);
 		this.overview_imageview_logo.setLayoutY(164);
@@ -42,7 +42,13 @@ public class overviewController {
 		//this.overview_listview_plans.setOpacity(0.75);
 		
 		this.overview_listview_plans.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-			ResourceBundle langBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(Main.getInstance().config.getString("Settings.Language.language", "de"), Main.getInstance().config.getString("Settings.Language.country", "DE")));
+			ResourceBundle langBundle = null;
+			try {
+				langBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(Main.getInstance().settings.getLanguageLanguage(), Main.getInstance().settings.getLanguageCountry()));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			String newPlanString = langBundle.getString("key.overview_new_plan");
 			if(newValue.equalsIgnoreCase(newPlanString)) {
 				this.overview_label_name.setText(newValue + "Neuer Plan");
