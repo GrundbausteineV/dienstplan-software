@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -59,6 +60,8 @@ public class loginLogic {
 		Scene scene = new Scene(pane);
 		dialog.setScene(scene);
 		dialog.setResizable(false);
+		dialog.setTitle(this.app.APPLICATION_TITLE);
+		dialog.getIcons().add(new Image(this.app.APPLICATION_ICON));
 		dialog.show();
 		
 		return;
@@ -85,16 +88,21 @@ public class loginLogic {
 	}
 	
 	public boolean checkUsername(TextField textfield, String username, String password) {
+		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
+		
 		ResultSet rs = this.app.sqliteDatabase.select("SELECT * FROM User");
 		
 		try {
 			if (!rs.isBeforeFirst() ) {    
 				Main.getInstance().showTooltip(Main.getInstance().primaryStage, textfield, Main.getInstance().resourceBundle.getString("key.login_tooltip_error_nouser"), null);
+				this.app.sqliteDatabase.disconnect();
 				return true;
 			} else {
 				while(rs.next()) {
 					if((rs.getString("Username").equalsIgnoreCase(username)) && (rs.getString("Password").equalsIgnoreCase(generatePasswordHash(password)))) {
 						this.app.loadOverview();
+						this.app.sqliteDatabase.disconnect();
 						return true;
 					}
 				}
@@ -103,7 +111,8 @@ public class loginLogic {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
+		this.app.sqliteDatabase.disconnect();
 		return false;
 	}
 	

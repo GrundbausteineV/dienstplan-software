@@ -25,6 +25,8 @@ public class settings {
 	}
 
 	private void createSettingsDatabase() {
+		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
 
 		ResultSet rs = this.app.sqliteDatabase.getMetaData();		
 		Boolean contains = false;
@@ -69,12 +71,14 @@ public class settings {
 
 			this.app.sqliteDatabase.insert(sql);
 		}
-
-
+		
+		this.app.sqliteDatabase.disconnect();
 
 	}
 
 	private void createUserDatabase() {
+		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
 
 		String sql = "CREATE TABLE IF NOT EXISTS User " +
 				"(ID 						INTEGER 	PRIMARY KEY	AUTOINCREMENT, " +
@@ -87,10 +91,14 @@ public class settings {
 				" DatabasePassword         	TEXT    			NOT NULL);";
 
 		this.app.sqliteDatabase.create(sql);
+		
+		this.app.sqliteDatabase.disconnect();;
 
 	}
 
 	private void updateDatabase() {
+		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
 
 		String sql = "UPDATE Settings SET " +
 				"Credit_Author='" + this.app.CREDIT_AUTHOR + "', " +
@@ -98,12 +106,18 @@ public class settings {
 				"Credit_Version='" + this.app.CREDIT_VERSION + "' WHERE ID=1;";
 
 		this.app.sqliteDatabase.update(sql);
+		
+		this.app.sqliteDatabase.disconnect();;
 
 	}
 
 	public String getLanguageDescription() {
+		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
+		
 		ResultSet rs = this.app.sqliteDatabase.select("SELECT * FROM Settings WHERE ID=1;");
-		if(rs == null) {
+		if(rs == null) {			
+			this.app.sqliteDatabase.disconnect();
 			return "Deutsch";
 		} else {
 			String description = "";
@@ -116,13 +130,18 @@ public class settings {
 				e.printStackTrace();
 			}
 			this.app.log.LogDebug("Description: " + description);
+			this.app.sqliteDatabase.disconnect();
 			return description;
 		}
 	}
 
 	public String getLanguageLanguage() {
+		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
+		
 		ResultSet rs = this.app.sqliteDatabase.select("SELECT * FROM Settings WHERE ID=1;");
 		if(rs == null) {
+			this.app.sqliteDatabase.disconnect();
 			return "de";
 		} else {
 			String language = "";
@@ -135,13 +154,18 @@ public class settings {
 				e.printStackTrace();
 			}
 			this.app.log.LogDebug("Language: " + language);
+			this.app.sqliteDatabase.disconnect();
 			return language;
 		}
 	}
 
 	public String getLanguageCountry() {
+		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
+		
 		ResultSet rs = this.app.sqliteDatabase.select("SELECT * FROM Settings WHERE ID=1;");
 		if(rs == null) {
+			this.app.sqliteDatabase.disconnect();
 			return "DE";
 		} else {
 			String country = "";
@@ -154,17 +178,24 @@ public class settings {
 				e.printStackTrace();
 			}
 			this.app.log.LogDebug("Country: " + country);
+			this.app.sqliteDatabase.disconnect();
 			return country;
 		}
 	}
 
 	public void setLanguage(String language, String country, String description) {
+		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
+		
 		String sql = "UPDATE Settings SET " +
 				"LOCALIZATION_LANGUAGE='" + language + "', " +
 				"LOCALIZATION_COUNTRY='" + country + "', " +
 				"LOCALIZATION_DESCRIPTION='" + description + "' WHERE ID=1;";
 
 		this.app.sqliteDatabase.update(sql);
+		
+		this.app.sqliteDatabase.disconnect();
+		
 	}
 
 }

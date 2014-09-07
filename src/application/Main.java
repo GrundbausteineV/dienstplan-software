@@ -14,6 +14,7 @@ import application.logic.login.createUserLogic;
 import application.logic.login.loginLogic;
 import application.logic.overview.overviewLogic;
 import configuration.*;
+import database.mysql.MySQL;
 import database.sqlite.SQLite;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -53,6 +54,9 @@ public class Main extends Application {
 	public final String DATABASE_FILE			= "settings.db";
 	public final String PASSWORD_SALT			= "g867Rzu7657F6tdf7d758F687RfHfr4fgFDhD56ffdZtZr67R7RFGFGUGzuTRDTGUt2TGT";
 	
+	public final String APPLICATION_TITLE = "Grundbaustein e.V. Dienstplan-Software 2014";
+	public final String APPLICATION_ICON = "/resources/icons/application/blue-folder.png";
+	
 	public ResourceBundle resourceBundle = null;
 
 	// Log initialisieren
@@ -64,6 +68,8 @@ public class Main extends Application {
 	
 	// H2 Database class
 	public SQLite sqliteDatabase = null;
+	// MySQL Database class
+	public MySQL mysqlDatabase = null;
 
 	// Import aller Logic-Klassen
 	public loginLogic loginLogicC = null;
@@ -90,9 +96,6 @@ public class Main extends Application {
 	public ObservableList<String> languageIcon = FXCollections.observableArrayList();	
 
 	public ObservableList<String> planOverview = FXCollections.observableArrayList();
-	
-	private String applicationTitle = "Grundbaustein e.V. Dienstplan-Software 2014";
-	private String applicationIcon = "/resources/icons/application/blue-folder.png";
 
 
 	public static void main(String[] args) {
@@ -111,10 +114,12 @@ public class Main extends Application {
 
 		this.log = new Log();
 		this.sqliteDatabase = new SQLite(this);
+		this.mysqlDatabase = new MySQL(this);
 		//this.appConfig = new appConfig(this);
 		this.initLanguage = new initLanguages(this);
 		
-		this.sqliteDatabase.connect("settings", "settings.db");
+		this.mysqlDatabase.testConnection();
+		//this.sqliteDatabase.connect("settings", "settings.db");
 		
 		if(initLanguage.initiateLanguages()){
 			log.LogInfo("Languages initialized");
@@ -152,11 +157,11 @@ public class Main extends Application {
 		//remove window decoration
 		this.primaryStage.initStyle(StageStyle.UNDECORATED);
 		this.primaryStage.setScene(scene);
-		this.primaryStage.setTitle(applicationTitle);
+		this.primaryStage.setTitle(this.APPLICATION_TITLE);
 		//primaryStage.getIcons().add(new Image("/resources/icons/app-icon.png"));
 		//primaryStage.getIcons().add(new Image("/resources/icons/favicon_32.png"));
 		//primaryStage.getIcons().add(new Image("/resources/icons/favicon_64.png"));
-		this.primaryStage.getIcons().add(new Image(applicationIcon));
+		this.primaryStage.getIcons().add(new Image(this.APPLICATION_ICON));
 		this.primaryStage.show();
 
 	}
@@ -234,8 +239,8 @@ public class Main extends Application {
 		this.primaryStage.hide();
 		this.overviewStage = new Stage();
 		this.overviewStage.initStyle(StageStyle.DECORATED);
-		this.overviewStage.setTitle(applicationTitle);
-		this.overviewStage.getIcons().add(new Image(applicationIcon));
+		this.overviewStage.setTitle(this.APPLICATION_TITLE);
+		this.overviewStage.getIcons().add(new Image(this.APPLICATION_ICON));
 		this.overviewStage.setScene(scene);
 		this.overviewStage.show();
 		
@@ -243,7 +248,7 @@ public class Main extends Application {
 
 	private void shutdownApplication() {
 		
-		this.sqliteDatabase.disconnect();
+		//this.sqliteDatabase.disconnect();
 		
 		log.LogInfo("Shutting down application...");
 		log.LogInfo("Shutdown successfull!");

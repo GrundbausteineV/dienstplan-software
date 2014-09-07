@@ -24,7 +24,11 @@ public class createUserLogic {
 		
 		String sql = "INSERT INTO User (Username, Password, DatabaseType, DatabaseName, DatabaseURL, DatabaseUser, DatabasePassword) VALUES('" + username + "','" + securePassword + "','" + dbtype + "','" + dbname + "','" + dburl + "','" + dbuser + "','" + secureDbPassword + "')";
 		
+		this.app.sqliteDatabase.connect("settings", "settings.db");
+		
 		this.app.sqliteDatabase.insert(sql);
+		
+		this.app.sqliteDatabase.disconnect();
 		
 	}
 

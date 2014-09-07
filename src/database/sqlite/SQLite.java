@@ -27,6 +27,7 @@ public class SQLite {
 	}
 	
 	public ResultSet getMetaData() {
+		
 		DatabaseMetaData md;
 		try {
 			md = conn.getMetaData();
@@ -106,8 +107,9 @@ public class SQLite {
 	public void disconnect() {
 
 		try {
-			stmt.close();
-			conn.close();
+			if(stmt != null)
+				this.stmt.close();
+			this.conn.close();
 			this.app.log.LogDebug("Successfully disconnected from Database.");
 		} catch (Exception e) {
 			this.app.log.LogError("", e);
