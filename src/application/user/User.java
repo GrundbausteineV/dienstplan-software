@@ -102,19 +102,19 @@ public class User {
 
 			String sql = "CREATE TABLE IF NOT EXISTS Settings " +
 					"(ID 						INTEGER 	PRIMARY KEY	AUTOINCREMENT, " +
-					" User			           	TEXT    NOT NULL, " +
-					" Created				    TEXT    NOT NULL, " +
-					" Last_Modified           	TEXT    NOT NULL);";
+					" User			           	TEXT    	NOT NULL, " +
+					" Created				    TEXT    	NOT NULL, " +
+					" Last_Modified           	TEXT    	NOT NULL);";
 
 			dbconn.create(sql);
 
 			sql = "CREATE TABLE IF NOT EXISTS Plans " +
 					"(ID 						INTEGER 	PRIMARY KEY	AUTOINCREMENT, " +
-					" Name			           	TEXT    NOT NULL, " +
+					" Name			           	TEXT    	NOT NULL, " +
 					" Description			    TEXT, " +
 					" Start_Date			    INTEGER, " +
 					" End_Date				    INTEGER, " +
-					" Prefixe      	     		TEXT    NOT NULL);";
+					" Prefixe      	     		TEXT    	NOT NULL);";
 
 			dbconn.create(sql);
 		}

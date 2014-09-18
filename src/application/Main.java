@@ -5,14 +5,13 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import util.encryption.CryptoException;
-import util.encryption.FileEncryptor;
 import util.localization.initLanguages;
 import util.logging.Log;
 import yaml.file.*;
 import application.logic.login.createUserLogic;
 import application.logic.login.loginLogic;
 import application.logic.overview.overviewLogic;
+import application.user.User;
 import configuration.*;
 import database.mysql.MySQL;
 import database.sqlite.SQLite;
@@ -22,6 +21,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Control;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
@@ -47,19 +47,30 @@ import javafx.stage.StageStyle;
 
 public class Main extends Application {
 	
+	/**
+	 * Initialisierung der Programm-Konstanten
+	 */
 	public final String CREDIT_AUTHOR 			= "Jan-Eric Dreßler";
 	public final String CREDIT_ORGANIZATION 	= "Gemeinschaft für Medienkompetenz Grundbaustein e.V.";
 	public final String CREDIT_VERSION 			= "0.0.2";
 	public final String DATABASE_DIRECTORY		= "settings";
 	public final String DATABASE_FILE			= "settings.db";
+	public final String SAVE_DIRECTORY			= "saves";
 	public final String PASSWORD_SALT			= "g867Rzu7657F6tdf7d758F687RfHfr4fgFDhD56ffdZtZr67R7RFGFGUGzuTRDTGUt2TGT";
 	
 	public final String APPLICATION_TITLE = "Grundbaustein e.V. Dienstplan-Software 2014";
 	public final String APPLICATION_ICON = "/resources/icons/application/blue-folder.png";
 	
+	/**
+	 * Spracheinstellungen werden über die gesamte Laufzeit allen Fenstern zugänglich gemacht
+	 */
+	// TODO Getter und Setter einbauen
 	public ResourceBundle resourceBundle = null;
 
-	// Log initialisieren
+	/**
+	 * Die Log-Klasse wird zum Start initialisiert und steht allen Klassen zur Verfügung
+	 */
+	// TODO Getter und Setter einbauen
 	public Log log = null;
 
 	// Configuration Files
@@ -70,6 +81,9 @@ public class Main extends Application {
 	public SQLite sqliteDatabase = null;
 	// MySQL Database class
 	public MySQL mysqlDatabase = null;
+	
+	// User class
+	public User user = null;
 
 	// Import aller Logic-Klassen
 	public loginLogic loginLogicC = null;
@@ -92,10 +106,10 @@ public class Main extends Application {
 	
 	private static Main instance;
 	
+	// TODO Observables in eigene Pseudo-Klasse unterbringen (auslagern)
 	public ObservableList<MenuItem> languageList = FXCollections.observableArrayList();
 	public ObservableList<String> languageIcon = FXCollections.observableArrayList();	
-
-	public ObservableList<String> planOverview = FXCollections.observableArrayList();
+	public ObservableList<Button> planOverview = FXCollections.observableArrayList();
 
 
 	public static void main(String[] args) {
@@ -114,12 +128,11 @@ public class Main extends Application {
 
 		this.log = new Log();
 		this.sqliteDatabase = new SQLite(this);
-		this.mysqlDatabase = new MySQL(this);
+		//this.mysqlDatabase = new MySQL(this);
 		//this.appConfig = new appConfig(this);
 		this.initLanguage = new initLanguages(this);
 		
-		this.mysqlDatabase.testConnection();
-		//this.sqliteDatabase.connect("settings", "settings.db");
+		//this.mysqlDatabase.testConnection();
 		
 		if(initLanguage.initiateLanguages()){
 			log.LogInfo("Languages initialized");
@@ -148,13 +161,11 @@ public class Main extends Application {
 		try {
 			rootLayout = loader.load();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		Scene scene = new Scene(rootLayout);
 
-		//remove window decoration
 		this.primaryStage.initStyle(StageStyle.UNDECORATED);
 		this.primaryStage.setScene(scene);
 		this.primaryStage.setTitle(this.APPLICATION_TITLE);
@@ -178,7 +189,6 @@ public class Main extends Application {
 
 	public File getDataFolder() {
 		File currentDirectory = new File(new File("").getAbsolutePath());
-		//this.controller.setLabel(currentDirectory.toString());
 		return (new File(currentDirectory.toString()));
 	}
 
@@ -248,11 +258,10 @@ public class Main extends Application {
 
 	private void shutdownApplication() {
 		
-		//this.sqliteDatabase.disconnect();
-		
 		log.LogInfo("Shutting down application...");
-		log.LogInfo("Shutdown successfull!");
 		this.hiddenStage.hide();
+		log.LogInfo("Shutdown successfull!");
+		/*
 		this.planOverview.forEach(item -> {
 			File inputFile = new File(this.getDataFolder(), "saves" + File.separator + item);
 			File encryptedFile = new File(this.getDataFolder(), "saves" + File.separator + item + ".enc");
@@ -277,5 +286,6 @@ public class Main extends Application {
 			}
 			
 		});
+		*/
 	}
 }

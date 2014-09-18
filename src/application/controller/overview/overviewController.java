@@ -1,25 +1,19 @@
 package application.controller.overview;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-
 import application.Main;
+import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
 
 public class overviewController {	
 
 	@FXML
-	private ListView<String> overview_listview_plans;
+	private FlowPane overview_flowpane_plans;
 	@FXML
 	private Button overview_button_new;
-	@FXML
-	private ImageView overview_imageview_logo;
-	@FXML
-	private Label overview_label_name;
 
 	/**
 	 * The constructor.
@@ -34,14 +28,45 @@ public class overviewController {
 	 */
 	@FXML
 	private void initialize(){
-		/*this.overview_imageview_logo.setImage(new Image("/resources/icons/application/blue-folder.png"));
-		this.overview_imageview_logo.setLayoutX(19);
-		this.overview_imageview_logo.setLayoutY(164);
-		this.overview_imageview_logo.setOpacity(1.0);*/
-		this.overview_listview_plans.setItems(Main.getInstance().planOverview);
-		//this.overview_listview_plans.setOpacity(0.75);
 		
-		this.overview_listview_plans.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+		ImageView iconImage = new ImageView(new Image("/resources/icons/application/blue-folder.png"));
+		iconImage.setFitHeight(64);
+		iconImage.setFitWidth(64);
+		this.overview_button_new.setGraphic(iconImage);
+		
+		this.overview_flowpane_plans.getChildren().addAll(Main.getInstance().planOverview);
+		
+		this.overview_button_new.setOnAction((event) -> {
+			Main.getInstance().planOverview.add(new Button("Hallo"));
+		});
+		
+		Main.getInstance().planOverview.addListener(new ListChangeListener<Button>() {
+
+			@Override
+			public void onChanged(ListChangeListener.Change<? extends Button> c) {
+				
+				while (c.next()) {
+	                 if (c.wasPermutated()) {
+	                     for (int i = c.getFrom(); i < c.getTo(); ++i) {
+	                          //permutate
+	                     }
+	                 } else if (c.wasUpdated()) {
+	                          //update item
+	                 } else {
+	                     for (Button remitem : c.getRemoved()) {
+	                    	 getOverviewFlowPanePlanes().getChildren().remove(remitem);
+	                     }
+	                     for (Button additem : c.getAddedSubList()) {
+	                    	 getOverviewFlowPanePlanes().getChildren().add(additem);
+	                     }
+	                 }
+	             }
+
+			}
+			
+		});
+		
+		/*this.overview_listview_plans.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
 			ResourceBundle langBundle = null;
 			try {
 				langBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(Main.getInstance().settings.getLanguageLanguage(), Main.getInstance().settings.getLanguageCountry()));
@@ -56,6 +81,10 @@ public class overviewController {
 				this.overview_label_name.setText(newValue);
 			}
 			
-		});
+		});*/
+	}
+	
+	public FlowPane getOverviewFlowPanePlanes() {
+		return this.overview_flowpane_plans;
 	}
 }
