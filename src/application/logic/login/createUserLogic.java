@@ -1,5 +1,7 @@
 package application.logic.login;
 
+import database.sqlite.SQLite;
+import util.codegeneration.CodeGenerator;
 import application.Main;
 
 public class createUserLogic {
@@ -22,13 +24,22 @@ public class createUserLogic {
 		if(dbpassword.equalsIgnoreCase(""))
 			secureDbPassword="";
 		
-		String sql = "INSERT INTO User (Username, Password, DatabaseType, DatabaseName, DatabaseURL, DatabaseUser, DatabasePassword) VALUES('" + username + "','" + securePassword + "','" + dbtype + "','" + dbname + "','" + dburl + "','" + dbuser + "','" + secureDbPassword + "')";
+		String sql = "";
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		if(dbtype.equalsIgnoreCase("SQLite")) {
+			sql = "INSERT INTO User (Username, Password, DatabaseType, DatabaseFile, DatabaseName, DatabaseURL, DatabaseUser, DatabasePassword) VALUES('" + username + "','" + securePassword + "','" + dbtype + "','" + CodeGenerator.getNext() + "','" + dbname + "','" + dburl + "','" + dbuser + "','" + secureDbPassword + "')";
+		} else {
+			sql = "INSERT INTO User (Username, Password, DatabaseType, DatabaseFile, DatabaseName, DatabaseURL, DatabaseUser, DatabasePassword) VALUES('" + username + "','" + securePassword + "','" + dbtype + "','" + "" + "','" + dbname + "','" + dburl + "','" + dbuser + "','" + secureDbPassword + "')";
+		}
 		
-		this.app.sqliteDatabase.insert(sql);
 		
-		this.app.sqliteDatabase.disconnect();
+		SQLite dbconn = new SQLite();
+		dbconn.connect("settings", "settings.db");
+		
+		dbconn.insert(sql);		
+		
+		dbconn.disconnect();
+		dbconn = null;
 		
 	}
 

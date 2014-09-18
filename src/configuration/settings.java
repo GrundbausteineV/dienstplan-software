@@ -3,6 +3,7 @@ package configuration;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import database.sqlite.SQLite;
 import application.Main;
 
 public class settings {
@@ -26,9 +27,10 @@ public class settings {
 
 	private void createSettingsDatabase() {
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.DATABASE_DIRECTORY, this.app.DATABASE_FILE);
 
-		ResultSet rs = this.app.sqliteDatabase.getMetaData();		
+		ResultSet rs = dbconn.getMetaData();		
 		Boolean contains = false;
 
 		try {
@@ -52,7 +54,7 @@ public class settings {
 					" Localization_Country      TEXT    NOT NULL, " +
 					" Localization_Description  TEXT    NOT NULL);";
 
-			this.app.sqliteDatabase.create(sql);
+			dbconn.create(sql);
 			
 			sql = "INSERT INTO Settings " +
 					"(Credit_Author, " +
@@ -69,55 +71,63 @@ public class settings {
 					"'DE', " +
 					"'Deutsch');";
 
-			this.app.sqliteDatabase.insert(sql);
+			dbconn.insert(sql);
 		}
 		
-		this.app.sqliteDatabase.disconnect();
+		dbconn.disconnect();
+		dbconn = null;
 
 	}
 
 	private void createUserDatabase() {
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.DATABASE_DIRECTORY, this.app.DATABASE_FILE);
 
 		String sql = "CREATE TABLE IF NOT EXISTS User " +
 				"(ID 						INTEGER 	PRIMARY KEY	AUTOINCREMENT, " +
 				" Username				    TEXT    			NOT NULL, " +
 				" Password				    TEXT    			NOT NULL, " +
 				" DatabaseType			    TEXT    			NOT NULL, " +
+				" DatabaseFile			   	INTEGER    			NOT NULL, " +
 				" DatabaseName			    TEXT    			NOT NULL, " +
 				" DatabaseURL			    TEXT    			NOT NULL, " +
 				" DatabaseUser			    TEXT    			NOT NULL, " +
 				" DatabasePassword         	TEXT    			NOT NULL);";
 
-		this.app.sqliteDatabase.create(sql);
+		dbconn.create(sql);
 		
-		this.app.sqliteDatabase.disconnect();;
+		dbconn.disconnect();
+		dbconn = null;
 
 	}
 
 	private void updateDatabase() {
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.DATABASE_DIRECTORY, this.app.DATABASE_FILE);
 
 		String sql = "UPDATE Settings SET " +
 				"Credit_Author='" + this.app.CREDIT_AUTHOR + "', " +
 				"Credit_Organization='" + this.app.CREDIT_ORGANIZATION + "', " +
 				"Credit_Version='" + this.app.CREDIT_VERSION + "' WHERE ID=1;";
 
-		this.app.sqliteDatabase.update(sql);
+		dbconn.update(sql);
 		
-		this.app.sqliteDatabase.disconnect();;
+		dbconn.disconnect();
+		dbconn = null;
 
 	}
 
 	public String getLanguageDescription() {
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.DATABASE_DIRECTORY, this.app.DATABASE_FILE);
 		
-		ResultSet rs = this.app.sqliteDatabase.select("SELECT * FROM Settings WHERE ID=1;");
+		ResultSet rs = dbconn.select("SELECT * FROM Settings WHERE ID=1;");
 		if(rs == null) {			
-			this.app.sqliteDatabase.disconnect();
+			dbconn.disconnect();
+			dbconn = null;
 			return "Deutsch";
 		} else {
 			String description = "";
@@ -130,18 +140,21 @@ public class settings {
 				e.printStackTrace();
 			}
 			this.app.log.LogDebug("Description: " + description);
-			this.app.sqliteDatabase.disconnect();
+			dbconn.disconnect();
+			dbconn = null;
 			return description;
 		}
 	}
 
 	public String getLanguageLanguage() {
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.DATABASE_DIRECTORY, this.app.DATABASE_FILE);
 		
-		ResultSet rs = this.app.sqliteDatabase.select("SELECT * FROM Settings WHERE ID=1;");
+		ResultSet rs = dbconn.select("SELECT * FROM Settings WHERE ID=1;");
 		if(rs == null) {
-			this.app.sqliteDatabase.disconnect();
+			dbconn.disconnect();
+			dbconn = null;
 			return "de";
 		} else {
 			String language = "";
@@ -154,18 +167,21 @@ public class settings {
 				e.printStackTrace();
 			}
 			this.app.log.LogDebug("Language: " + language);
-			this.app.sqliteDatabase.disconnect();
+			dbconn.disconnect();
+			dbconn = null;
 			return language;
 		}
 	}
 
 	public String getLanguageCountry() {
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.DATABASE_DIRECTORY, this.app.DATABASE_FILE);
 		
-		ResultSet rs = this.app.sqliteDatabase.select("SELECT * FROM Settings WHERE ID=1;");
+		ResultSet rs = dbconn.select("SELECT * FROM Settings WHERE ID=1;");
 		if(rs == null) {
-			this.app.sqliteDatabase.disconnect();
+			dbconn.disconnect();
+			dbconn = null;
 			return "DE";
 		} else {
 			String country = "";
@@ -178,23 +194,26 @@ public class settings {
 				e.printStackTrace();
 			}
 			this.app.log.LogDebug("Country: " + country);
-			this.app.sqliteDatabase.disconnect();
+			dbconn.disconnect();
+			dbconn = null;
 			return country;
 		}
 	}
 
 	public void setLanguage(String language, String country, String description) {
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.DATABASE_DIRECTORY, this.app.DATABASE_FILE);
 		
 		String sql = "UPDATE Settings SET " +
 				"LOCALIZATION_LANGUAGE='" + language + "', " +
 				"LOCALIZATION_COUNTRY='" + country + "', " +
 				"LOCALIZATION_DESCRIPTION='" + description + "' WHERE ID=1;";
 
-		this.app.sqliteDatabase.update(sql);
+		dbconn.update(sql);
 		
-		this.app.sqliteDatabase.disconnect();
+		dbconn.disconnect();
+		dbconn = null;
 		
 	}
 

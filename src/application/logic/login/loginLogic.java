@@ -5,8 +5,10 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import database.sqlite.SQLite;
 import util.properties.propertiesFile;
 import application.Main;
+import application.user.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -89,20 +91,30 @@ public class loginLogic {
 	
 	public boolean checkUsername(TextField textfield, String username, String password) {
 		
-		this.app.sqliteDatabase.connect("settings", "settings.db");
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.DATABASE_DIRECTORY, this.app.DATABASE_FILE);
 		
-		ResultSet rs = this.app.sqliteDatabase.select("SELECT * FROM User");
+		ResultSet rs = dbconn.select("SELECT * FROM User;");
 		
 		try {
 			if (!rs.isBeforeFirst() ) {    
 				Main.getInstance().showTooltip(Main.getInstance().primaryStage, textfield, Main.getInstance().resourceBundle.getString("key.login_tooltip_error_nouser"), null);
-				this.app.sqliteDatabase.disconnect();
+				dbconn.disconnect();
+				dbconn = null;
 				return true;
 			} else {
 				while(rs.next()) {
 					if((rs.getString("Username").equalsIgnoreCase(username)) && (rs.getString("Password").equalsIgnoreCase(generatePasswordHash(password)))) {
+						String dbT = rs.getString("DatabaseType");
+						String dbF = rs.getString("DatabaseFile");
+						dbconn.disconnect();
+						dbconn = null;
+						if(dbT.equalsIgnoreCase("SQLite")) {
+							this.app.user = new User(this.app, username, password, dbT, dbF);
+						} else {
+							
+						}
 						this.app.loadOverview();
-						this.app.sqliteDatabase.disconnect();
 						return true;
 					}
 				}
@@ -112,7 +124,8 @@ public class loginLogic {
 			e.printStackTrace();
 		}
 
-		this.app.sqliteDatabase.disconnect();
+		dbconn.disconnect();
+		dbconn = null;
 		return false;
 	}
 	

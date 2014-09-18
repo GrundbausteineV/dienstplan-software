@@ -1,20 +1,18 @@
 package application.logic.overview;
 
-import java.io.File;
-import java.util.Locale;
-import java.util.ResourceBundle;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import util.encryption.CryptoException;
-import util.encryption.FileEncryptor;
-import yaml.file.FileConfiguration;
-import yaml.file.YamlConfiguration;
+import database.sqlite.SQLite;
+import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import application.Main;
 
 public class overviewLogic {
 
 	private Main app = null;
-	private FileConfiguration config = null;
-	private File configFile = null;
 
 	public overviewLogic(Main app) {
 		this.app = app;
@@ -22,87 +20,35 @@ public class overviewLogic {
 	
 	public void initPlanOverview() {
 		
-		ResourceBundle langBundle = ResourceBundle.getBundle("resources.localisation.local", new Locale(this.app.settings.getLanguageLanguage(), this.app.settings.getLanguageCountry()));
-		this.app.planOverview.add(langBundle.getString("key.overview_new_plan"));
+		SQLite dbconn = new SQLite();
+		dbconn.connect(this.app.SAVE_DIRECTORY, this.app.user.getDatabaseFile());
 		
-		File dir = new File(this.app.getDataFolder(), "saves" + File.separator);
-		String fileName;
-		File[] files = dir.listFiles();
-		if (files != null) {
-			for (int i = 0; i < files.length; i++) {
-				if (files[i].isDirectory()) {
-				}
-				else {
-					fileName = files[i].getName();
-					
-					getConfig(fileName);
-					this.app.log.LogDebug("FileName:" + fileName);
-					
-					if(this.config.getBoolean("EncryptionData")) {
-						this.app.planOverview.add(fileName);
-						this.app.log.LogDebug(fileName + " added to List");
-					} else {
-						File inputFile = new File(this.app.getDataFolder(), "saves" + File.separator + fileName);
-						//File encryptedFile = new File(fileName + ".enc");
-						String[] newFile = fileName.split(".yml.enc");
-						//this.app.log.LogDebug("Logging:" + fileName);
-						File decryptedFile = new File(this.app.getDataFolder(), "saves" + File.separator + newFile[0] + ".yml");
-						//this.app.log.LogDebug("Decrypt:" + decryptedFile.toString());
-
-						try {
-							//FileEncryptor.encrypt("JEDressler", "Juhu", inputFile, encryptedFile);
-							FileEncryptor.decrypt("JEDressler", "Juhu", inputFile, decryptedFile);
-						} catch (CryptoException ex) {
-							System.out.println(ex.getMessage());
-							ex.printStackTrace();
-						}
-						try{
-				    		if(inputFile.delete()){
-				    			System.out.println(inputFile.getName() + " is deleted!");
-				    		}else{
-				    			System.out.println("Delete operation is failed.");
-				    		}				 
-				    	}catch(Exception e){				 
-				    		e.printStackTrace();				 
-				    	}
-
-						this.app.log.LogDebug("EncFileName:" + newFile[0] + ".yml");
-						getConfig(newFile[0] + ".yml");
-						
-						if(this.config.getBoolean("EncryptionData")) {
-							this.app.planOverview.add(newFile[0] + ".yml");
-							this.app.log.LogDebug(newFile[0] + ".yml" + " added to List");
-						} else {
-							this.app.log.LogDebug("Could not add" + newFile[0] + ".yml" + " to List");
-						}
-					}
-					
-					
-			       
-				}
+		String sql = "SELECT * FROM Plans;";
+		
+		ResultSet rs = dbconn.select(sql);
+		
+		try {
+			while(rs.next()) {
+				Button button = new Button();
+				button.setMinWidth(125);
+				button.setMaxWidth(125);
+				button.setMinHeight(80);
+				button.setText(rs.getString("Name"));
+				button.setContentDisplay(ContentDisplay.TOP);
+				ImageView iconImage = new ImageView(new Image("/resources/icons/application/blue-folder.png"));
+				iconImage.setFitHeight(64);
+				iconImage.setFitWidth(64);
+				button.setGraphic(iconImage);
+				
+				this.app.planOverview.add(button);
 			}
+		} catch (SQLException e) {
+			this.app.log.LogError("Can't receive data from database: " + this.app.user.getDatabaseFile(), e);
 		}
 		
-	}
-
-	private void reloadConfig(String fileName) {
-		if (this.configFile == null) {	    	
-			File dir = new File("saves");
-			if(dir.exists() == false) {
-				dir.mkdir();
-			}
-			this.configFile = new File(this.app.getDataFolder(), "saves" + File.separator + fileName);
-		}
-		this.config = YamlConfiguration.loadConfiguration(this.configFile);
-	
+		dbconn.disconnect();
+		dbconn = null;
 		
-	}
-
-	private FileConfiguration getConfig(String fileName) {
-		if (this.config == null) {
-			reloadConfig(fileName);
-		}
-		return this.config;
 	}
 	
 }

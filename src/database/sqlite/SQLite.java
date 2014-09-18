@@ -24,6 +24,15 @@ public class SQLite {
 			dir.mkdir();
 		}
 		
+		dir = new File(this.app.getDataFolder() + File.separator + this.app.SAVE_DIRECTORY);
+		if(dir.exists() == false) {
+			dir.mkdir();
+		}
+		
+	}
+
+	public SQLite(){
+		
 	}
 	
 	public ResultSet getMetaData() {
@@ -95,11 +104,10 @@ public class SQLite {
 	public void connect(String directory, String database) {		
 		
 		try {
-			Class.forName("org.sqlite.JDBC");
-			this.conn = DriverManager.getConnection("jdbc:sqlite:" + this.app.getDataFolder() + File.separator + directory + File.separator + database);
-			this.app.log.LogDebug("Successfully connected to Database.");
+			this.conn = DriverManager.getConnection("jdbc:sqlite:" + Main.getInstance().getDataFolder() + File.separator + directory + File.separator + database);
+			Main.getInstance().log.LogDebug("Successfully connected to Database.");
 		} catch (Exception e) {
-			this.app.log.LogError("", e);
+			Main.getInstance().log.LogError("", e);
 		}
 
 	}
@@ -110,9 +118,9 @@ public class SQLite {
 			if(stmt != null)
 				this.stmt.close();
 			this.conn.close();
-			this.app.log.LogDebug("Successfully disconnected from Database.");
+			Main.getInstance().log.LogDebug("Successfully disconnected from Database.");
 		} catch (Exception e) {
-			this.app.log.LogError("", e);
+			Main.getInstance().log.LogError("", e);
 		}
 
 	}
