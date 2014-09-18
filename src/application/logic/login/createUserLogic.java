@@ -27,7 +27,7 @@ public class createUserLogic {
 		String sql = "";
 		
 		if(dbtype.equalsIgnoreCase("SQLite")) {
-			sql = "INSERT INTO User (Username, Password, DatabaseType, DatabaseFile, DatabaseName, DatabaseURL, DatabaseUser, DatabasePassword) VALUES('" + username + "','" + securePassword + "','" + dbtype + "','" + CodeGenerator.getNext() + "','" + dbname + "','" + dburl + "','" + dbuser + "','" + secureDbPassword + "')";
+			sql = "INSERT INTO User (Username, Password, DatabaseType, DatabaseFile, DatabaseName, DatabaseURL, DatabaseUser, DatabasePassword) VALUES('" + username + "','" + securePassword + "','" + dbtype + "','" + CodeGenerator.getNext() + ".db" + "','" + dbname + "','" + dburl + "','" + dbuser + "','" + secureDbPassword + "')";
 		} else {
 			sql = "INSERT INTO User (Username, Password, DatabaseType, DatabaseFile, DatabaseName, DatabaseURL, DatabaseUser, DatabasePassword) VALUES('" + username + "','" + securePassword + "','" + dbtype + "','" + "" + "','" + dbname + "','" + dburl + "','" + dbuser + "','" + secureDbPassword + "')";
 		}
