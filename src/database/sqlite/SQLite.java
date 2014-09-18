@@ -104,6 +104,7 @@ public class SQLite {
 	public void connect(String directory, String database) {		
 		
 		try {
+			Class.forName("org.sqlite.JDBC");
 			this.conn = DriverManager.getConnection("jdbc:sqlite:" + Main.getInstance().getDataFolder() + File.separator + directory + File.separator + database);
 			Main.getInstance().log.LogDebug("Successfully connected to Database.");
 		} catch (Exception e) {
