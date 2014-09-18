@@ -1,5 +1,6 @@
 package application.controller.overview;
 
+import util.codegeneration.CodeGenerator;
 import application.Main;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -37,6 +38,8 @@ public class createPlanController {
 	 */
 	@FXML
 	private void initialize(){
+		
+		this.createplan_textfield_prefix.setText(CodeGenerator.getNext(6) + "_");
 		
 		this.createplan_button_createplan.setOnAction((event) -> {
 			if(checkFields()) {

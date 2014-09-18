@@ -1,4 +1,4 @@
-package application.user;
+package application.container.user;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

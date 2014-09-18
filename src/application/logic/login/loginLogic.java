@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import database.sqlite.SQLite;
 import util.properties.propertiesFile;
 import application.Main;
-import application.user.User;
+import application.container.user.User;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
