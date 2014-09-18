@@ -114,7 +114,7 @@ public class User {
 					" Description			    TEXT, " +
 					" Start_Date			    INTEGER, " +
 					" End_Date				    INTEGER, " +
-					" Prefixe      	     		TEXT    	NOT NULL);";
+					" Prefix      	     		TEXT    	NOT NULL);";
 
 			dbconn.create(sql);
 		}

@@ -103,6 +103,7 @@ public class Main extends Application {
 	private Stage overviewStage = null;
 	public Stage primaryStage = null;
 	public Stage registerUserStage = null;
+	public Stage registerPlanStage = null;
 	
 	private static Main instance;
 	

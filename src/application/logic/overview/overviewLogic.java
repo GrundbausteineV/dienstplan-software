@@ -4,10 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import database.sqlite.SQLite;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ContentDisplay;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import application.Main;
 
 public class overviewLogic {
@@ -39,6 +45,9 @@ public class overviewLogic {
 				iconImage.setFitHeight(64);
 				iconImage.setFitWidth(64);
 				button.setGraphic(iconImage);
+				Tooltip tip = new Tooltip();
+				tip.setText(rs.getString("Description") + "\r\n" + "Start: " + rs.getString("Start_Date") + "\r\n" + "Ende: " + rs.getString("End_Date"));
+				button.setTooltip(tip);
 				
 				this.app.planOverview.add(button);
 			}
@@ -49,6 +58,31 @@ public class overviewLogic {
 		dbconn.disconnect();
 		dbconn = null;
 		
+	}
+
+	public void displayRegisterPlanLayer() {
+		Stage dialog = new Stage();
+		this.app.registerPlanStage = dialog;
+		dialog.initStyle(StageStyle.UTILITY);
+		
+		AnchorPane pane = null;
+		FXMLLoader fxmlLoader = null;
+		fxmlLoader = new FXMLLoader(this.getClass().getResource("/resources/fxml/overview/createPlan.fxml"));
+		fxmlLoader.setResources(this.app.resourceBundle);
+		try {
+			pane = fxmlLoader.load();
+		} catch (Exception ex) {
+			this.app.log.LogError("can't load /resources/fxml/overview/createPlan.fxml", ex);
+		}
+		
+		Scene scene = new Scene(pane);
+		dialog.setScene(scene);
+		dialog.setResizable(false);
+		dialog.setTitle(this.app.APPLICATION_TITLE);
+		dialog.getIcons().add(new Image(this.app.APPLICATION_ICON));
+		dialog.show();
+		
+		return;
 	}
 	
 }

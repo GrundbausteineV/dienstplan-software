@@ -37,7 +37,7 @@ public class overviewController {
 		this.overview_flowpane_plans.getChildren().addAll(Main.getInstance().planOverview);
 		
 		this.overview_button_new.setOnAction((event) -> {
-			Main.getInstance().planOverview.add(new Button("Hallo"));
+			Main.getInstance().overviewLogicC.displayRegisterPlanLayer();
 		});
 		
 		Main.getInstance().planOverview.addListener(new ListChangeListener<Button>() {

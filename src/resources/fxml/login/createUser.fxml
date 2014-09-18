@@ -20,13 +20,13 @@
 <ToggleGroup fx:id="DatabaseType" />
 </toggleGroup></ToggleButton><ToggleButton fx:id="createuser_togglebutton_mysql" mnemonicParsing="false" text="MySQL" toggleGroup="$DatabaseType" />
 </children></HBox><HBox>
-<children><Label prefWidth="250.0" text="%key.createuser_databasename" /><TextField fx:id="createuser_textfield_databasename" />
+<children><Label fx:id="createuser_label_databasename" prefWidth="250.0" text="%key.createuser_databasename" /><TextField fx:id="createuser_textfield_databasename" />
 </children></HBox><HBox>
-<children><Label prefWidth="250.0" text="%key.createuser_databaseurl" /><TextField fx:id="createuser_textfield_databaseurl" />
+<children><Label fx:id="createuser_label_databaseurl" prefWidth="250.0" text="%key.createuser_databaseurl" /><TextField fx:id="createuser_textfield_databaseurl" />
 </children></HBox><HBox>
-<children><Label prefWidth="250.0" text="%key.createuser_databaseuser" /><TextField fx:id="createuser_textfield_databaseuser" />
+<children><Label fx:id="createuser_label_databaseuser" prefWidth="250.0" text="%key.createuser_databaseuser" /><TextField fx:id="createuser_textfield_databaseuser" />
 </children></HBox><HBox>
-<children><Label prefWidth="250.0" text="%key.createuser_databasepassword" /><PasswordField fx:id="createuser_textfield_databasepassword" />
+<children><Label fx:id="createuser_label_databasepassword" prefWidth="250.0" text="%key.createuser_databasepassword" /><PasswordField fx:id="createuser_textfield_databasepassword" />
 </children></HBox>
 </children></VBox><HBox alignment="CENTER" layoutX="100.0" layoutY="336.0" prefHeight="50.0" prefWidth="400.0" spacing="50.0">
 <children><Button fx:id="createuser_button_createuser" mnemonicParsing="false" text="%key.createuser_createuser" /><Button fx:id="createuser_button_resetuser" mnemonicParsing="false" text="%key.createuser_resetuser" />
